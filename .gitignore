@@ -1,0 +1,49 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+.env.local
+
+# React Native
+.expo/
+dist/
+web-build/
+
+# Android
+android/app/build
+android/app/.cxx
+android/.gradle
+android/local.properties
+android/app/debug.keystore
+android/app/release.keystore
+*.skls
+
+# iOS
+ios/build/
+ios/Pods/
+ios/.xccheckout
+ios/*.xcworkspace
+ios/*.xcuserdata
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Misc
+.bundle/
+vendor/bundle/
+.ruby-version
+.ruby-gemset
+
+# Backend Specific
+backend/node_modules/
+backend/.env
+backend/logs/
+
+# General
+artifacts/
+temp/

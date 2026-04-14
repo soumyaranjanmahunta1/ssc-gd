@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "668503068672",
+    "project_id": "sscgd-335d5",
+    "storage_bucket": "sscgd-335d5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:668503068672:android:74c0fe7fb93c3e4b4cc8e5",
+        "android_client_info": {
+          "package_name": "com.sscgd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA_ai-qrFxLOuWVvFsb1I1hWErDOu9vMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
