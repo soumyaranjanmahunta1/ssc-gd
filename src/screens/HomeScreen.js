@@ -76,6 +76,39 @@ export default function HomeScreen({ navigation }) {
                 </View>
             </LinearGradient>
 
+            {/* ─── Marketing Banner ──────────────────── */}
+            <LinearGradient
+                colors={['#FF6B35', '#FF8E53']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.marketingBanner}>
+                <Text style={styles.bannerIcon}>🏆</Text>
+                <View style={styles.bannerTextWrap}>
+                    <Text style={styles.bannerHeadline}>SSC GD 2026 Exam Pattern</Text>
+                    <Text style={styles.bannerSub}>Questions based on Latest Official Syllabus</Text>
+                </View>
+            </LinearGradient>
+
+            {/* ─── Trust Badges ──────────────────────── */}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.badgeStrip} contentContainerStyle={styles.badgeContent}>
+                <View style={styles.badge}><Text style={styles.badgeText}>✅ 100% Syllabus Covered</Text></View>
+                <View style={styles.badge}><Text style={styles.badgeText}>🎯 Exam Pattern Based Questions</Text></View>
+                <View style={styles.badge}><Text style={styles.badgeText}>📊 Previous Year Level</Text></View>
+                <View style={styles.badge}><Text style={styles.badgeText}>🔥 Most Expected Topics</Text></View>
+                <View style={styles.badge}><Text style={styles.badgeText}>⚡ Updated for 2026</Text></View>
+            </ScrollView>
+
+            {/* ─── Highlight Box ─────────────────────── */}
+            <View style={styles.highlightBox}>
+                <Text style={styles.highlightStar}>⭐</Text>
+                <View style={{flex:1}}>
+                    <Text style={styles.highlightTitle}>Crack SSC GD in First Attempt!</Text>
+                    <Text style={styles.highlightDesc}>Our questions are carefully crafted matching the{' '}
+                        <Text style={styles.highlightAccent}>exact difficulty & style</Text>{' '}of SSC GD official exams.
+                    </Text>
+                </View>
+            </View>
+
             {/* ─── Stats Row ──────────────────────────── */}
             <Animated.View style={[styles.statsRow, { opacity: fadeAnim }]}>
                 <StatChip emoji="🎯" label="Last Score" value={stats.totalTests ? `${stats.lastScore}/${stats.lastTotal}` : '—'} />
@@ -110,12 +143,14 @@ export default function HomeScreen({ navigation }) {
 
             {/* ─── Quick Tips ─────────────────────────── */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Quick Info</Text>
+                <Text style={styles.sectionTitle}>📋 Exam Pattern 2026</Text>
                 <View style={styles.tipsCard}>
                     <Text style={styles.tipItem}>📌 80 Questions · 160 Total Marks</Text>
                     <Text style={styles.tipItem}>⏱️ 60 Minutes Duration</Text>
                     <Text style={styles.tipItem}>✅ +2.00 for Correct Answer</Text>
                     <Text style={styles.tipItem}>❌ -0.25 Negative Marking</Text>
+                    <View style={styles.tipDivider}/>
+                    <Text style={styles.tipHighlight}>🔥 Practice daily for guaranteed improvement!</Text>
                 </View>
             </View>
             <View style={{ height: SPACING.xl }} />
@@ -140,7 +175,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingTop: 50,
-        paddingBottom: 50,
+        paddingBottom: 30,
         paddingHorizontal: SPACING.lg,
     },
     greeting: { ...FONTS.body2, color: 'rgba(255,255,255,0.75)' },
@@ -154,10 +189,54 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     avatarText: { ...FONTS.h3, color: COLORS.white },
+    // Marketing
+    marketingBanner: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginHorizontal: SPACING.md,
+        marginTop: SPACING.sm,
+        borderRadius: RADIUS.lg,
+        padding: SPACING.md,
+        gap: SPACING.sm,
+        ...SHADOW.md,
+    },
+    bannerIcon: { fontSize: 28 },
+    bannerTextWrap: { flex: 1 },
+    bannerHeadline: { ...FONTS.h4, color: '#fff', fontWeight: '800' },
+    bannerSub: { ...FONTS.caption, color: 'rgba(255,255,255,0.9)', marginTop: 2 },
+    badgeStrip: { marginTop: SPACING.sm },
+    badgeContent: { paddingHorizontal: SPACING.md, gap: SPACING.xs },
+    badge: {
+        backgroundColor: '#EEF2FF',
+        borderRadius: 20,
+        paddingHorizontal: SPACING.sm,
+        paddingVertical: 6,
+        borderWidth: 1,
+        borderColor: '#C7D2FE',
+    },
+    badgeText: { ...FONTS.caption, color: '#4338CA', fontWeight: '700' },
+    highlightBox: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        margin: SPACING.md,
+        marginBottom: 0,
+        backgroundColor: '#FFFBEB',
+        borderRadius: RADIUS.lg,
+        padding: SPACING.md,
+        borderLeftWidth: 4,
+        borderLeftColor: '#F59E0B',
+        gap: SPACING.sm,
+        ...SHADOW.sm,
+    },
+    highlightStar: { fontSize: 22, marginTop: 2 },
+    highlightTitle: { ...FONTS.h4, color: '#92400E', marginBottom: 4 },
+    highlightDesc: { ...FONTS.body2, color: '#78350F', lineHeight: 20 },
+    highlightAccent: { color: '#D97706', fontWeight: '800' },
+    // Stats
     statsRow: {
         flexDirection: 'row',
         marginHorizontal: SPACING.md,
-        marginTop: -24,
+        marginTop: SPACING.md,
         backgroundColor: COLORS.white,
         borderRadius: RADIUS.lg,
         padding: SPACING.md,
@@ -185,4 +264,6 @@ const styles = StyleSheet.create({
         gap: SPACING.sm,
     },
     tipItem: { ...FONTS.body2, color: COLORS.textSecondary },
+    tipDivider: { height: 1, backgroundColor: '#EEF2FF', marginVertical: 4 },
+    tipHighlight: { ...FONTS.body2, color: '#7C3AED', fontWeight: '700' },
 });

@@ -18,6 +18,27 @@ import { setUser, setLoading, setError, clearError } from '../redux/slices/authS
 import { isValidEmail } from '../utils/helpers';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOW } from '../utils/theme';
 
+const Field = ({ label, value, onChangeText, placeholder, keyboardType, secureTextEntry, autoComplete, errorKey, right, fieldErrors, setFieldErrors }) => (
+    <>
+        <Text style={styles.label}>{label}</Text>
+        <View style={[styles.inputRow, fieldErrors[errorKey] && styles.inputError]}>
+            <TextInput
+                style={styles.inputFlex}
+                placeholder={placeholder}
+                placeholderTextColor={COLORS.textMuted}
+                value={value}
+                onChangeText={v => { onChangeText(v); setFieldErrors(p => ({ ...p, [errorKey]: null })); }}
+                keyboardType={keyboardType || 'default'}
+                secureTextEntry={secureTextEntry}
+                autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}
+                autoComplete={autoComplete}
+            />
+            {right}
+        </View>
+        {fieldErrors[errorKey] ? <Text style={styles.fieldError}>{fieldErrors[errorKey]}</Text> : null}
+    </>
+);
+
 export default function SignupScreen({ navigation }) {
     const dispatch = useDispatch();
     const { isLoading, error } = useSelector(state => state.auth);
@@ -56,27 +77,6 @@ export default function SignupScreen({ navigation }) {
         }
     };
 
-    const Field = ({ label, value, onChangeText, placeholder, keyboardType, secureTextEntry, autoComplete, errorKey, right }) => (
-        <>
-            <Text style={styles.label}>{label}</Text>
-            <View style={[styles.inputRow, fieldErrors[errorKey] && styles.inputError]}>
-                <TextInput
-                    style={styles.inputFlex}
-                    placeholder={placeholder}
-                    placeholderTextColor={COLORS.textMuted}
-                    value={value}
-                    onChangeText={v => { onChangeText(v); setFieldErrors(p => ({ ...p, [errorKey]: null })); }}
-                    keyboardType={keyboardType || 'default'}
-                    secureTextEntry={secureTextEntry}
-                    autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}
-                    autoComplete={autoComplete}
-                />
-                {right}
-            </View>
-            {fieldErrors[errorKey] ? <Text style={styles.fieldError}>{fieldErrors[errorKey]}</Text> : null}
-        </>
-    );
-
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <StatusBar barStyle="light-content" backgroundColor={COLORS.primaryStart} />
@@ -94,9 +94,9 @@ export default function SignupScreen({ navigation }) {
                         </View>
                     ) : null}
 
-                    <Field label="Full Name" value={name} onChangeText={setName} placeholder="Your full name" errorKey="name" autoComplete="name" />
+                    <Field label="Full Name" value={name} onChangeText={setName} placeholder="Your full name" errorKey="name" autoComplete="name" fieldErrors={fieldErrors} setFieldErrors={setFieldErrors} />
                     <View style={{ height: SPACING.md }} />
-                    <Field label="Email Address" value={email} onChangeText={setEmail} placeholder="you@example.com" keyboardType="email-address" errorKey="email" autoComplete="email" />
+                    <Field label="Email Address" value={email} onChangeText={setEmail} placeholder="you@example.com" keyboardType="email-address" errorKey="email" autoComplete="email" fieldErrors={fieldErrors} setFieldErrors={setFieldErrors} />
                     <View style={{ height: SPACING.md }} />
                     <Field
                         label="Password"
@@ -106,6 +106,8 @@ export default function SignupScreen({ navigation }) {
                         secureTextEntry={!showPass}
                         errorKey="password"
                         autoComplete="new-password"
+                        fieldErrors={fieldErrors}
+                        setFieldErrors={setFieldErrors}
                         right={
                             <TouchableOpacity onPress={() => setShowPass(p => !p)} style={styles.eyeBtn}>
                                 <Text style={styles.eyeText}>{showPass ? '🙈' : '👁️'}</Text>
@@ -113,7 +115,7 @@ export default function SignupScreen({ navigation }) {
                         }
                     />
                     <View style={{ height: SPACING.md }} />
-                    <Field label="Confirm Password" value={confirmPass} onChangeText={setConfirmPass} placeholder="Re-enter password" secureTextEntry errorKey="confirmPass" autoComplete="new-password" />
+                    <Field label="Confirm Password" value={confirmPass} onChangeText={setConfirmPass} placeholder="Re-enter password" secureTextEntry errorKey="confirmPass" autoComplete="new-password" fieldErrors={fieldErrors} setFieldErrors={setFieldErrors} />
 
                     <TouchableOpacity
                         style={[styles.signupBtn, isLoading && styles.btnDisabled]}

@@ -1,8 +1,10 @@
-// API Base URL
-// Android Emulator  → http://10.0.2.2:5000/api
-// Physical device   → http://192.168.0.153:5000/api  (your current machine IP)
-// Production        → https://your-api.onrender.com/api
-export const API_BASE_URL = 'http://10.0.2.2:5000/api';
+// Set this to true when you deploy your backend to Render
+const IS_PRODUCTION = true;
+
+const DEV_URL = 'http://10.0.2.2:5000/api';
+const PROD_URL = 'https://sscgd-mock-api.onrender.com/api'; // Replace with your actual Render URL later
+
+export const API_BASE_URL = IS_PRODUCTION ? PROD_URL : DEV_URL;
 
 export const SUBJECTS = ['GK', 'Math', 'Reasoning', 'English'];
 
