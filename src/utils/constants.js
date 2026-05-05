@@ -2,7 +2,7 @@
 const IS_PRODUCTION = true;
 
 const DEV_URL = 'http://10.0.2.2:5000/api';
-const PROD_URL = 'https://sscgd-mock-api.onrender.com/api'; // Replace with your actual Render URL later
+const PROD_URL = 'https://sscgd-backend.onrender.com/api'; // Replace with your actual Render URL later
 
 export const API_BASE_URL = IS_PRODUCTION ? PROD_URL : DEV_URL;
 

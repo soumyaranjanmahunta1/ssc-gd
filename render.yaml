@@ -6,10 +6,9 @@ services:
     rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
+    healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 5000
-      - key: MONGODB_URI
-        sync: false # Must be set in Render dashboard or sync from env
       - key: NODE_ENV
         value: production
+      - key: MONGODB_URI
+        sync: false  # Set this secret in the Render dashboard

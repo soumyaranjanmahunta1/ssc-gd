@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"d:\\\\ReactNative\\\\SSCGD\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "PowerShell(Get-ChildItem -Path \"d:\\\\ReactNative\\\\SSCGD\" -Force | Select-Object Name, @{Name='IsDir';Expression={$_.PSIsContainer}} | Format-Table -AutoSize)",
+      "Bash(keytool -list -keystore \"d:\\\\ReactNative\\\\SSCGD\\\\android\\\\app\\\\sscgd-production-key.keystore\" -storepass sscgd123)"
+    ]
+  }
+}

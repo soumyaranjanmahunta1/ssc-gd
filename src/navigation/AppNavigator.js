@@ -9,6 +9,7 @@ import { setUser } from '../redux/slices/authSlice';
 import { setBookmarks } from '../redux/slices/bookmarkSlice';
 import { getUserProfile } from '../services/authService';
 import { getBookmarks } from '../services/firestoreService';
+import { wakeUpServer } from '../services/questionService';
 import { COLORS } from '../utils/theme';
 
 // Auth Screens
@@ -93,6 +94,9 @@ function TabIcon({ emoji, color }) {
 export default function AppNavigator() {
     const dispatch = useDispatch();
     const { isAuthenticated, isLoading } = useSelector(state => state.auth);
+
+    // Warm up Render backend on first launch to avoid cold-start delay during tests
+    useEffect(() => { wakeUpServer(); }, []);
 
     // ✅ Check Firebase auth state HERE — not inside SplashScreen
     // This ensures isLoading gets resolved even before NavigationContainer mounts

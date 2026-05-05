@@ -5,12 +5,20 @@ import { API_BASE_URL } from '../utils/constants';
 const CACHE_KEY = 'cached_questions';
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour in milliseconds
 
-// Axios instance
+// Axios instance — 30s timeout to handle Render free-tier cold starts (~15-50s wake-up)
 const api = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 10000,
+    timeout: 30000,
     headers: { 'Content-Type': 'application/json' },
 });
+
+/**
+ * Pings the backend health endpoint to wake up the Render server.
+ * Call this on app launch so the server is warm when the user starts a test.
+ */
+export const wakeUpServer = () => {
+    axios.get(`${API_BASE_URL}/health`, { timeout: 60000 }).catch(() => {});
+};
 
 // Request interceptor (can add auth token later)
 api.interceptors.request.use(
