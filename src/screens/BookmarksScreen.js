@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     View,
     Text,
@@ -6,22 +6,40 @@ import {
     FlatList,
     TouchableOpacity,
     StatusBar,
+    ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeBookmark } from '../redux/slices/bookmarkSlice';
-import { saveBookmarks } from '../services/firestoreService';
+import { toggleBookmark, fetchUserBookmarks } from '../services/questionService';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOW } from '../utils/theme';
 
 export default function BookmarksScreen() {
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.auth);
-    const { bookmarks } = useSelector(state => state.bookmarks);
+    const [bookmarks, setBookmarks] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (!user?.email) return;
+            let active = true;
+            setLoading(true);
+            fetchUserBookmarks(user.email)
+                .then(questions => { if (active) setBookmarks(questions || []); })
+                .catch(() => { if (active) setBookmarks([]); })
+                .finally(() => { if (active) setLoading(false); });
+            return () => { active = false; };
+        }, [user?.email])
+    );
+
     const handleRemove = async (questionId) => {
-        dispatch(removeBookmark(questionId));
-        const updated = bookmarks.filter(b => b._id !== questionId);
-        if (user?.uid) {
-            await saveBookmarks(user.uid, updated).catch(() => {});
+        const qid = String(questionId);
+        setBookmarks(prev => prev.filter(b => String(b._id) !== qid));
+        dispatch(removeBookmark(qid));
+        if (user?.email) {
+            toggleBookmark(user.email, qid).catch(() => {});
         }
     };
 
@@ -35,7 +53,11 @@ export default function BookmarksScreen() {
                 <Text style={styles.headerSubtitle}>{bookmarks.length} saved question{bookmarks.length !== 1 ? 's' : ''}</Text>
             </LinearGradient>
 
-            {bookmarks.length === 0 ? (
+            {loading ? (
+                <View style={styles.centered}>
+                    <ActivityIndicator size="large" color={COLORS.primary} />
+                </View>
+            ) : bookmarks.length === 0 ? (
                 <View style={styles.emptyContainer}>
                     <Text style={styles.emptyEmoji}>🔖</Text>
                     <Text style={styles.emptyTitle}>No Bookmarks Yet</Text>
@@ -44,7 +66,7 @@ export default function BookmarksScreen() {
                     </Text>
                 </View>
             ) : (
-                <FlatList
+            <FlatList
                     data={bookmarks}
                     keyExtractor={item => item._id}
                     contentContainerStyle={styles.listContent}

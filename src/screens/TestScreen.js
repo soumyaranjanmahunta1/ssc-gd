@@ -25,8 +25,7 @@ import {
     resetTest,
 } from '../redux/slices/testSlice';
 import { addBookmark, removeBookmark } from '../redux/slices/bookmarkSlice';
-import { fetchQuestions, fetchMockTestByNumber } from '../services/questionService';
-import { saveBookmarks } from '../services/firestoreService';
+import { fetchQuestions, fetchMockTestByNumber, toggleBookmark } from '../services/questionService';
 import { formatTime } from '../utils/helpers';
 import { MOCK_TEST_CONFIG } from '../utils/constants';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOW } from '../utils/theme';
@@ -143,23 +142,20 @@ export default function TestScreen({ navigation, route }) {
     };
     
     const handleBookmarkToggle = async () => {
-        if (!questions[currentIndex] || !user?.uid) return;
+        if (!questions[currentIndex] || !user?.email) return;
         const q = questions[currentIndex];
         const isBookmarked = bookmarks.some(b => b._id === q._id);
 
-        let updatedBookmarks;
         if (isBookmarked) {
             dispatch(removeBookmark(q._id));
-            updatedBookmarks = bookmarks.filter(b => b._id !== q._id);
         } else {
             dispatch(addBookmark(q));
-            updatedBookmarks = [...bookmarks, q];
         }
 
         try {
-            await saveBookmarks(user.uid, updatedBookmarks);
+            await toggleBookmark(user.email, q._id);
         } catch (err) {
-            console.error('Error saving bookmark:', err);
+            console.error('Error toggling bookmark:', err);
         }
     };
 

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInWithEmail, getAuthErrorMessage } from '../services/authService';
+import { signInWithEmail, getUserProfile, getAuthErrorMessage } from '../services/authService';
 import { setUser, setLoading, setError, clearError } from '../redux/slices/authSlice';
 import { isValidEmail } from '../utils/helpers';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOW } from '../utils/theme';
@@ -43,9 +43,10 @@ export default function LoginScreen({ navigation }) {
         dispatch(setLoading(true));
         try {
             const user = await signInWithEmail(email.trim(), password);
+            const profile = await getUserProfile(user.uid);
             dispatch(setUser({
                 uid: user.uid,
-                name: user.displayName || 'User',
+                name: profile?.name || user.displayName || 'User',
                 email: user.email,
             }));
         } catch (e) {

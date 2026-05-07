@@ -8,8 +8,7 @@ import auth from '@react-native-firebase/auth';
 import { setUser } from '../redux/slices/authSlice';
 import { setBookmarks } from '../redux/slices/bookmarkSlice';
 import { getUserProfile } from '../services/authService';
-import { getBookmarks } from '../services/firestoreService';
-import { wakeUpServer } from '../services/questionService';
+import { wakeUpServer, fetchUserBookmarks } from '../services/questionService';
 import { COLORS } from '../utils/theme';
 
 // Auth Screens
@@ -115,14 +114,9 @@ export default function AppNavigator() {
 
                 // 2. Then, fetch the full profile from Firestore to get the real 'name'
                 try {
-                    // Small delay for new signups to give Firestore time to save
-                    if (!user.displayName) {
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                    }
-                    
                     const [profile, bookmarks] = await Promise.all([
                         getUserProfile(user.uid),
-                        getBookmarks(user.uid)
+                        fetchUserBookmarks(user.email),
                     ]);
 
                     if (profile && profile.name) {
@@ -131,7 +125,7 @@ export default function AppNavigator() {
                             name: profile.name,
                         }));
                     }
-                    
+
                     if (bookmarks) {
                         dispatch(setBookmarks(bookmarks));
                     }

@@ -6,7 +6,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch } from 'react-redux';
 import { signUpWithEmail, getAuthErrorMessage } from '../services/authService';
-import { setUser, setLoading, setError, clearError } from '../redux/slices/authSlice';
+import { setUser, setError, clearError } from '../redux/slices/authSlice';
 import { isValidEmail } from '../utils/helpers';
 import { API_BASE_URL } from '../utils/constants';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOW } from '../utils/theme';
@@ -88,11 +88,12 @@ export default function SignupScreen({ navigation }) {
 
             // Create Firebase account
             dispatch(clearError());
-            dispatch(setLoading(true));
             const user = await signUpWithEmail(email.trim(), password, name.trim());
             dispatch(setUser({ uid: user.uid, name: name.trim(), email: user.email }));
         } catch (e) {
-            dispatch(setError(getAuthErrorMessage(e)));
+            const msg = getAuthErrorMessage(e);
+            setError2(msg);
+            dispatch(setError(msg));
         } finally {
             setLoading(false);
         }

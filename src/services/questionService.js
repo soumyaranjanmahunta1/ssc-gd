@@ -105,6 +105,21 @@ export const fetchMockTestByNumber = async (number) => {
 };
 
 /**
+ * Toggle a bookmark for a user. Returns { bookmarked: true/false }.
+ */
+export const toggleBookmark = async (email, questionId) => {
+    return await api.post('/bookmarks/toggle', { email, questionId });
+};
+
+/**
+ * Fetch all bookmarked questions for a user from MongoDB.
+ */
+export const fetchUserBookmarks = async (email) => {
+    const response = await api.get('/bookmarks', { params: { email } });
+    return response.data; // array of question objects
+};
+
+/**
  * Submit test result (server acknowledges, primary storage is Firestore)
  */
 export const submitTestResult = async (resultData) => {
