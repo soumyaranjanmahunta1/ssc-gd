@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { Resend } = require('resend');
 
 // In-memory OTP store: email -> { otp, expiry }
 const otpStore = new Map();
@@ -19,20 +18,31 @@ function getAdminAuth() {
 }
 
 async function sendOtpEmail(to, subject, otp) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  await resend.emails.send({
-    from: 'SSC GD App <onboarding@resend.dev>',
-    to: [to],
-    subject,
-    html: `
-      <div style="font-family:Arial,sans-serif;max-width:420px;margin:auto;padding:24px;border:1px solid #eee;border-radius:12px;">
-        <h2 style="color:#667eea;margin-bottom:8px;">SSC GD App</h2>
-        <p style="color:#444;">Your OTP is:</p>
-        <div style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1a1d3b;margin:20px 0;">${otp}</div>
-        <p style="color:#888;font-size:13px;">Valid for <strong>5 minutes</strong>. Do not share this with anyone.</p>
-      </div>
-    `,
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'api-key': process.env.BREVO_API_KEY,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { name: 'SSC GD App', email: process.env.BREVO_SENDER_EMAIL },
+      to: [{ email: to }],
+      subject,
+      htmlContent: `
+        <div style="font-family:Arial,sans-serif;max-width:420px;margin:auto;padding:24px;border:1px solid #eee;border-radius:12px;">
+          <h2 style="color:#667eea;margin-bottom:8px;">SSC GD App</h2>
+          <p style="color:#444;">Your OTP is:</p>
+          <div style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1a1d3b;margin:20px 0;">${otp}</div>
+          <p style="color:#888;font-size:13px;">Valid for <strong>5 minutes</strong>. Do not share this with anyone.</p>
+        </div>
+      `,
+    }),
   });
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Brevo error: ${err}`);
+  }
 }
 
 // POST /api/auth/send-otp
