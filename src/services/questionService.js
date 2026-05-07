@@ -79,16 +79,27 @@ export const fetchQuestions = async ({ subject = '', limit = 25, page = 1, diffi
 };
 
 /**
- * Fetches a perfectly balanced 80-question mock test (20 per subject)
- * Directly from the specialized backend endpoint.
+ * Fetch list of available mock tests from DB (auto-discovers any new ones added).
  */
-export const fetchBalancedMockTest = async () => {
+export const fetchMockTestList = async () => {
     try {
-        const response = await api.get('/questions/mock-test');
-        // response is already unwrapped by the interceptor to be the JSON object
+        const response = await api.get('/questions/mock-tests');
+        return response.data; // array of { number, questionCount }
+    } catch (error) {
+        console.error('fetchMockTestList error:', error);
+        throw error;
+    }
+};
+
+/**
+ * Fetch 80 questions for a specific mock test number.
+ */
+export const fetchMockTestByNumber = async (number) => {
+    try {
+        const response = await api.get(`/questions/mock-test/${number}`);
         return { questions: response.data };
     } catch (error) {
-        console.error('fetchBalancedMockTest error:', error);
+        console.error('fetchMockTestByNumber error:', error);
         throw error;
     }
 };

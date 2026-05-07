@@ -25,7 +25,7 @@ import {
     resetTest,
 } from '../redux/slices/testSlice';
 import { addBookmark, removeBookmark } from '../redux/slices/bookmarkSlice';
-import { fetchQuestions, fetchBalancedMockTest } from '../services/questionService';
+import { fetchQuestions, fetchMockTestByNumber } from '../services/questionService';
 import { saveBookmarks } from '../services/firestoreService';
 import { formatTime } from '../utils/helpers';
 import { MOCK_TEST_CONFIG } from '../utils/constants';
@@ -44,7 +44,7 @@ export default function TestScreen({ navigation, route }) {
     const { user } = useSelector(state => state.auth);
     const { bookmarks } = useSelector(state => state.bookmarks);
 
-    const { subject = null } = route.params || {};
+    const { subject = null, mockTestNumber = null } = route.params || {};
     const [timeLeft, setTimeLeft] = useState(MOCK_TEST_CONFIG.timeInMinutes * 60);
     const timerRef = useRef(null);
     const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -55,11 +55,16 @@ export default function TestScreen({ navigation, route }) {
             dispatch(setLoading(true));
             try {
                 let qs;
-                if (!subject) {
-                    // Full Mock Test: Balanced 80 questions (20/20/20/20)
-                    const res = await fetchBalancedMockTest();
+                if (mockTestNumber) {
+                    // Numbered Mock Test from list screen
+                    const res = await fetchMockTestByNumber(mockTestNumber);
                     qs = res.questions;
                     setTimeLeft(60 * 60); // 60 minutes
+                } else if (!subject) {
+                    // Fallback: shouldn't reach here anymore
+                    const res = await fetchMockTestByNumber(1);
+                    qs = res.questions;
+                    setTimeLeft(60 * 60);
                 } else {
                     // Subject-specific Test: 25 questions
                     const res = await fetchQuestions({
@@ -69,7 +74,7 @@ export default function TestScreen({ navigation, route }) {
                     qs = res.questions;
                     setTimeLeft(20 * 60); // 20 minutes for 25 questions
                 }
-                dispatch(setSubject(subject || 'Full Mock Test'));
+                dispatch(setSubject(mockTestNumber ? `Mock Test ${mockTestNumber}` : subject || 'Mock Test'));
                 dispatch(setQuestions(qs));
             } catch (e) {
                 dispatch(setError(e.message));

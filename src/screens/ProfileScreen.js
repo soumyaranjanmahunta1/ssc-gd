@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     StatusBar,
     Alert,
+    Linking,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,14 +33,15 @@ export default function ProfileScreen() {
         ]);
     };
 
-    const InfoRow = ({ emoji, label, value }) => (
-        <View style={styles.infoRow}>
+    const InfoRow = ({ emoji, label, value, onPress }) => (
+        <TouchableOpacity style={styles.infoRow} onPress={onPress} disabled={!onPress} activeOpacity={onPress ? 0.6 : 1}>
             <Text style={styles.infoEmoji}>{emoji}</Text>
             <View>
                 <Text style={styles.infoLabel}>{label}</Text>
-                <Text style={styles.infoValue}>{value || '—'}</Text>
+                <Text style={[styles.infoValue, onPress && styles.infoValueLink]}>{value || '—'}</Text>
             </View>
-        </View>
+            {onPress && <Text style={styles.infoLinkArrow}>↗</Text>}
+        </TouchableOpacity>
     );
 
     return (
@@ -66,9 +68,15 @@ export default function ProfileScreen() {
             {/* App Info */}
             <View style={styles.card}>
                 <Text style={styles.cardTitle}>App Info</Text>
-                <InfoRow emoji="📱" label="App Name" value="SSC GD Mock Test 2026" />
+                <InfoRow emoji="📱" label="App Name" value="SSC GD Mock Test 2027" />
                 <InfoRow emoji="🔢" label="Version" value="1.0.0" />
-                <InfoRow emoji="📚" label="Questions Available" value="40+ (Growing)" />
+                <InfoRow emoji="📚" label="Questions Available" value="10,000+" />
+                <InfoRow
+                    emoji="👨‍💻"
+                    label="Developed by"
+                    value="Soumya Ranjan Mahunta"
+                    onPress={() => Linking.openURL('https://www.instagram.com/soumyajeet_1')}
+                />
             </View>
 
             {/* Logout */}
@@ -123,6 +131,8 @@ const styles = StyleSheet.create({
     infoEmoji: { fontSize: 22, width: 32, textAlign: 'center' },
     infoLabel: { ...FONTS.caption, color: COLORS.textMuted },
     infoValue: { ...FONTS.body2, color: COLORS.textPrimary, fontWeight: '500', marginTop: 2 },
+    infoValueLink: { color: COLORS.primary, textDecorationLine: 'underline' },
+    infoLinkArrow: { ...FONTS.body2, color: COLORS.primary, marginLeft: 'auto', fontWeight: '700' },
     logoutBtn: {
         margin: SPACING.md,
         borderRadius: RADIUS.md,

@@ -110,6 +110,13 @@ export default function LoginScreen({ navigation }) {
                     {fieldErrors.password ? <Text style={styles.fieldError}>{fieldErrors.password}</Text> : null}
 
                     <TouchableOpacity
+                        style={styles.forgotBtn}
+                        onPress={() => navigation.navigate('ForgotPassword')}
+                        activeOpacity={0.7}>
+                        <Text style={styles.forgotText}>Forgot Password?</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
                         style={[styles.loginBtn, isLoading && styles.btnDisabled]}
                         onPress={handleLogin}
                         disabled={isLoading}
@@ -208,6 +215,8 @@ const styles = StyleSheet.create({
     },
     loginBtnText: { ...FONTS.button, color: COLORS.white, fontSize: 17 },
     btnDisabled: { opacity: 0.7 },
+    forgotBtn: { alignSelf: 'flex-end', marginTop: SPACING.sm },
+    forgotText: { ...FONTS.caption, color: COLORS.primary, fontWeight: '600' },
     divider: { flexDirection: 'row', alignItems: 'center', marginVertical: SPACING.lg },
     dividerLine: { flex: 1, height: 1, backgroundColor: COLORS.border },
     dividerText: { ...FONTS.caption, color: COLORS.textMuted, marginHorizontal: SPACING.sm },

@@ -16,9 +16,11 @@ import { COLORS } from '../utils/theme';
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 
 // Main Screens
 import HomeScreen from '../screens/HomeScreen';
+import MockTestListScreen from '../screens/MockTestListScreen';
 import TestScreen from '../screens/TestScreen';
 import ResultScreen from '../screens/ResultScreen';
 import TopicTestScreen from '../screens/TopicTestScreen';
@@ -165,11 +167,13 @@ export default function AppNavigator() {
                             options={{ animationTypeForReplace: 'pop' }}
                         />
                         <Stack.Screen name="Signup" component={SignupScreen} />
+                        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
                     </>
                 ) : (
                     // App Stack
                     <>
                         <Stack.Screen name="MainTabs" component={MainTabs} />
+                        <Stack.Screen name="MockTestList" component={MockTestListScreen} />
                         <Stack.Screen name="TopicTest" component={TopicTestScreen} />
                         <Stack.Screen
                             name="Test"

@@ -47,7 +47,7 @@ export default function SplashScreen({ navigation }) {
                     <Text style={styles.logoEmoji}>📚</Text>
                 </View>
                 <Text style={styles.appName}>SSC GD</Text>
-                <Text style={styles.appSubtitle}>Mock Test 2026</Text>
+                <Text style={styles.appSubtitle}>Mock Test 2027</Text>
             </Animated.View>
             <Animated.Text style={[styles.tagline, { opacity: fadeAnim }]}>
                 Free Practice • Score Higher

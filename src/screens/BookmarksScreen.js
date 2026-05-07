@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -6,23 +6,23 @@ import {
     FlatList,
     TouchableOpacity,
     StatusBar,
-    ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeBookmark } from '../redux/slices/bookmarkSlice';
-import { getBookmarks } from '../services/firestoreService';
-import { fetchQuestions } from '../services/questionService';
+import { saveBookmarks } from '../services/firestoreService';
 import { COLORS, FONTS, SPACING, RADIUS, SHADOW } from '../utils/theme';
 
 export default function BookmarksScreen() {
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.auth);
     const { bookmarks } = useSelector(state => state.bookmarks);
-    const [loading, setLoading] = useState(false);
-
-    const handleRemove = (questionId) => {
+    const handleRemove = async (questionId) => {
         dispatch(removeBookmark(questionId));
+        const updated = bookmarks.filter(b => b._id !== questionId);
+        if (user?.uid) {
+            await saveBookmarks(user.uid, updated).catch(() => {});
+        }
     };
 
     return (
@@ -35,11 +35,7 @@ export default function BookmarksScreen() {
                 <Text style={styles.headerSubtitle}>{bookmarks.length} saved question{bookmarks.length !== 1 ? 's' : ''}</Text>
             </LinearGradient>
 
-            {loading ? (
-                <View style={styles.centered}>
-                    <ActivityIndicator size="large" color={COLORS.primary} />
-                </View>
-            ) : bookmarks.length === 0 ? (
+            {bookmarks.length === 0 ? (
                 <View style={styles.emptyContainer}>
                     <Text style={styles.emptyEmoji}>🔖</Text>
                     <Text style={styles.emptyTitle}>No Bookmarks Yet</Text>

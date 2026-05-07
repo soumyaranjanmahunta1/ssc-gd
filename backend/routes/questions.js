@@ -46,35 +46,49 @@ router.get('/', async (req, res) => {
     }
 });
 
-// ─── GET /api/questions/mock-test ──────────────────────────────────────────────
-// Returns exactly 80 questions (20 from each: GK, Math, Reasoning, English)
-router.get('/mock-test', async (req, res) => {
+// ─── GET /api/questions/mock-tests ─────────────────────────────────────────────
+// Returns list of available mock test numbers with question counts
+router.get('/mock-tests', async (req, res) => {
     try {
-        const subjects = ['GK', 'Math', 'Reasoning', 'English'];
-        
-        // Use MongoDB aggregation to sample 20 random questions per subject
-        const questionPromises = subjects.map(subject => 
-            Question.aggregate([
-                { $match: { subject, isActive: true } },
-                { $sample: { size: 20 } },
-                { $project: { __v: 0, isActive: 0, createdAt: 0, updatedAt: 0 } }
-            ])
-        );
-
-        const results = await Promise.all(questionPromises);
-        
-        // Flatten and shuffle the final list
-        const allQuestions = results.flat();
-        const shuffled = allQuestions.sort(() => Math.random() - 0.5);
+        const tests = await Question.aggregate([
+            { $match: { isActive: true } },
+            { $group: { _id: '$mockTestNumber', count: { $sum: 1 } } },
+            { $match: { count: { $gte: 80 } } },
+            { $sort: { _id: 1 } },
+        ]);
 
         res.json({
             success: true,
-            data: shuffled,
-            total: shuffled.length
+            data: tests.map(t => ({ number: t._id, questionCount: t.count })),
         });
     } catch (error) {
-        console.error('GET /mock-test error:', error);
-        res.status(500).json({ success: false, message: 'Failed to generate mock test' });
+        console.error('GET /mock-tests error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch mock tests' });
+    }
+});
+
+// ─── GET /api/questions/mock-test/:number ──────────────────────────────────────
+// Returns exactly 80 questions for a specific mock test number
+router.get('/mock-test/:number', async (req, res) => {
+    try {
+        const number = parseInt(req.params.number);
+        if (isNaN(number) || number < 1) {
+            return res.status(400).json({ success: false, message: 'Invalid mock test number' });
+        }
+
+        const questions = await Question.find({ mockTestNumber: number, isActive: true })
+            .select('-__v -isActive -createdAt -updatedAt -mockTestNumber')
+            .lean();
+
+        if (questions.length < 80) {
+            return res.status(404).json({ success: false, message: 'Mock test not found or incomplete' });
+        }
+
+        const shuffled = questions.sort(() => Math.random() - 0.5).slice(0, 80);
+        res.json({ success: true, data: shuffled, total: shuffled.length });
+    } catch (error) {
+        console.error('GET /mock-test/:number error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch mock test' });
     }
 });
 

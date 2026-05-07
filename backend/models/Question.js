@@ -37,13 +37,18 @@ const questionSchema = new mongoose.Schema(
             type: Boolean,
             default: true,
         },
+        mockTestNumber: {
+            type: Number,
+            required: true,
+            min: 1,
+        },
     },
     {
         timestamps: true,
     }
 );
 
-// Index for faster subject-based queries
+questionSchema.index({ mockTestNumber: 1, subject: 1 });
 questionSchema.index({ subject: 1, difficulty: 1 });
 
 module.exports = mongoose.model('Question', questionSchema);

@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const questionRoutes = require('./routes/questions');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/api/', limiter);
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/questions', questionRoutes);
+app.use('/api/auth', authRoutes);
 
 // Health check — used by the app to wake up the server on cold start
 app.get('/api/health', (req, res) => {

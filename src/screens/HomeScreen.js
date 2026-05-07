@@ -17,11 +17,11 @@ const NAV_CARDS = [
     {
         id: 'mock',
         title: 'Mock Test',
-        subtitle: '80 Questions · 60 min',
+        subtitle: 'Mock 1, Mock 2... Choose & Start',
         emoji: '📝',
         grade: ['#667eea', '#764ba2'],
-        screen: 'Test',
-        params: { subject: null },
+        screen: 'MockTestList',
+        params: {},
     },
     {
         id: 'topic',
@@ -84,7 +84,7 @@ export default function HomeScreen({ navigation }) {
                 style={styles.marketingBanner}>
                 <Text style={styles.bannerIcon}>🏆</Text>
                 <View style={styles.bannerTextWrap}>
-                    <Text style={styles.bannerHeadline}>SSC GD 2026 Exam Pattern</Text>
+                    <Text style={styles.bannerHeadline}>SSC GD 2027 Exam Pattern</Text>
                     <Text style={styles.bannerSub}>Questions based on Latest Official Syllabus</Text>
                 </View>
             </LinearGradient>
@@ -95,7 +95,7 @@ export default function HomeScreen({ navigation }) {
                 <View style={styles.badge}><Text style={styles.badgeText}>🎯 Exam Pattern Based Questions</Text></View>
                 <View style={styles.badge}><Text style={styles.badgeText}>📊 Previous Year Level</Text></View>
                 <View style={styles.badge}><Text style={styles.badgeText}>🔥 Most Expected Topics</Text></View>
-                <View style={styles.badge}><Text style={styles.badgeText}>⚡ Updated for 2026</Text></View>
+                <View style={styles.badge}><Text style={styles.badgeText}>⚡ Updated for 2027</Text></View>
             </ScrollView>
 
             {/* ─── Highlight Box ─────────────────────── */}
@@ -143,7 +143,7 @@ export default function HomeScreen({ navigation }) {
 
             {/* ─── Quick Tips ─────────────────────────── */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>📋 Exam Pattern 2026</Text>
+                <Text style={styles.sectionTitle}>📋 Exam Pattern 2027</Text>
                 <View style={styles.tipsCard}>
                     <Text style={styles.tipItem}>📌 80 Questions · 160 Total Marks</Text>
                     <Text style={styles.tipItem}>⏱️ 60 Minutes Duration</Text>
