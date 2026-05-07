@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 // In-memory OTP store: email -> { otp, expiry }
 const otpStore = new Map();
@@ -18,13 +18,20 @@ function getAdminAuth() {
   return adminAuth;
 }
 
-function getTransporter() {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
-    },
+async function sendOtpEmail(to, subject, otp) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  await resend.emails.send({
+    from: 'SSC GD App <onboarding@resend.dev>',
+    to: [to],
+    subject,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:420px;margin:auto;padding:24px;border:1px solid #eee;border-radius:12px;">
+        <h2 style="color:#667eea;margin-bottom:8px;">SSC GD App</h2>
+        <p style="color:#444;">Your OTP is:</p>
+        <div style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1a1d3b;margin:20px 0;">${otp}</div>
+        <p style="color:#888;font-size:13px;">Valid for <strong>5 minutes</strong>. Do not share this with anyone.</p>
+      </div>
+    `,
   });
 }
 
@@ -44,19 +51,7 @@ router.post('/send-otp', async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     otpStore.set(email.trim().toLowerCase(), { otp, expiry: Date.now() + 5 * 60 * 1000 });
 
-    await getTransporter().sendMail({
-      from: `"SSC GD App" <${process.env.GMAIL_USER}>`,
-      to: email.trim(),
-      subject: 'Password Reset OTP - SSC GD',
-      html: `
-        <div style="font-family:Arial,sans-serif;max-width:420px;margin:auto;padding:24px;border:1px solid #eee;border-radius:12px;">
-          <h2 style="color:#667eea;margin-bottom:8px;">SSC GD App</h2>
-          <p style="color:#444;">Your password reset OTP is:</p>
-          <div style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1a1d3b;margin:20px 0;">${otp}</div>
-          <p style="color:#888;font-size:13px;">Valid for <strong>5 minutes</strong>. Do not share this with anyone.</p>
-        </div>
-      `,
-    });
+    await sendOtpEmail(email.trim(), 'Password Reset OTP - SSC GD', otp);
 
     res.json({ success: true, message: 'OTP sent to your email.' });
   } catch (err) {
@@ -116,19 +111,7 @@ router.post('/send-signup-otp', async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     otpStore.set(`signup:${email.trim().toLowerCase()}`, { otp, expiry: Date.now() + 5 * 60 * 1000 });
 
-    await getTransporter().sendMail({
-      from: `"SSC GD App" <${process.env.GMAIL_USER}>`,
-      to: email.trim(),
-      subject: 'Verify Your Email - SSC GD',
-      html: `
-        <div style="font-family:Arial,sans-serif;max-width:420px;margin:auto;padding:24px;border:1px solid #eee;border-radius:12px;">
-          <h2 style="color:#667eea;margin-bottom:8px;">SSC GD App</h2>
-          <p style="color:#444;">Welcome! Verify your email with this OTP:</p>
-          <div style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1a1d3b;margin:20px 0;">${otp}</div>
-          <p style="color:#888;font-size:13px;">Valid for <strong>5 minutes</strong>. Do not share this with anyone.</p>
-        </div>
-      `,
-    });
+    await sendOtpEmail(email.trim(), 'Verify Your Email - SSC GD', otp);
 
     res.json({ success: true, message: 'OTP sent to your email.' });
   } catch (err) {
