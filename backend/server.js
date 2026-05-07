@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const questionRoutes = require('./routes/questions');
 const authRoutes = require('./routes/auth');
+const bookmarkRoutes = require('./routes/bookmarks');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/api/', limiter);
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/questions', questionRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/bookmarks', bookmarkRoutes);
 
 // Health check — used by the app to wake up the server on cold start
 app.get('/api/health', (req, res) => {
