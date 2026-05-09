@@ -104,19 +104,28 @@ export const fetchMockTestByNumber = async (number) => {
     }
 };
 
-/**
- * Toggle a bookmark for a user. Returns { bookmarked: true/false }.
- */
 export const toggleBookmark = async (email, questionId) => {
     return await api.post('/bookmarks/toggle', { email, questionId });
 };
 
-/**
- * Fetch all bookmarked questions for a user from MongoDB.
- */
 export const fetchUserBookmarks = async (email) => {
     const response = await api.get('/bookmarks', { params: { email } });
-    return response.data; // array of question objects
+    return response.data;
+};
+
+export const fetchChapters = async () => {
+    const response = await api.get('/questions/chapters');
+    return response.data; // { Math: [{chapter, count}], Reasoning: [...], ... }
+};
+
+export const fetchMockTestQuestions = async (optionalSubject) => {
+    const response = await api.get('/questions/mock-test', { params: { optionalSubject } });
+    return { questions: response.data, subjects: response.subjects };
+};
+
+export const fetchChapterTestQuestions = async (subject, chapter) => {
+    const response = await api.get('/questions/chapter-test', { params: { subject, chapter } });
+    return response.data;
 };
 
 /**
