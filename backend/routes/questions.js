@@ -51,16 +51,17 @@ router.get('/mock-test', async (req, res) => {
 });
 
 // GET /api/questions/chapter-test?subject=Math&chapter=Percentage
-// Returns 10 questions for a specific chapter
+// Returns all available questions for a specific chapter, shuffled
 router.get('/chapter-test', async (req, res) => {
     try {
         const { subject, chapter } = req.query;
         if (!subject || !chapter) {
             return res.status(400).json({ success: false, message: 'subject and chapter required' });
         }
+        const total = await Question.countDocuments({ subject, chapter, isActive: true });
         const questions = await Question.aggregate([
             { $match: { subject, chapter, isActive: true } },
-            { $sample: { size: 10 } },
+            { $sample: { size: total } },
             { $project: { __v: 0, isActive: 0, createdAt: 0, updatedAt: 0 } },
         ]);
         res.json({ success: true, data: questions });

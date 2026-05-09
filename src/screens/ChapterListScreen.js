@@ -89,7 +89,7 @@ export default function ChapterListScreen({ navigation }) {
                     <Text style={styles.backText}>←</Text>
                 </TouchableOpacity>
                 <Text style={styles.title}>{meta.emoji} {selected}</Text>
-                <Text style={styles.subtitle}>{chapterList.length} chapters • 10 questions each</Text>
+                <Text style={styles.subtitle}>{chapterList.length} chapters • all questions included</Text>
             </LinearGradient>
 
             <FlatList
