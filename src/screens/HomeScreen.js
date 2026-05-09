@@ -42,6 +42,15 @@ const NAV_CARDS = [
         params: {},
     },
     {
+        id: 'pyq',
+        title: 'Previous Year Questions',
+        subtitle: 'Year-wise official exam papers',
+        emoji: '📜',
+        grade: ['#f7971e', '#ffd200'],
+        screen: 'PreviousYear',
+        params: {},
+    },
+    {
         id: 'dashboard',
         title: 'Performance',
         subtitle: 'Charts · Accuracy · Progress',

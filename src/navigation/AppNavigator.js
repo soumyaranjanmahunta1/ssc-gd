@@ -27,6 +27,7 @@ import TopicTestScreen from '../screens/TopicTestScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import BookmarksScreen from '../screens/BookmarksScreen';
+import PreviousYearScreen from '../screens/PreviousYearScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -177,6 +178,7 @@ export default function AppNavigator() {
                             options={{ gestureEnabled: false }}
                         />
                         <Stack.Screen name="Result" component={ResultScreen} />
+                        <Stack.Screen name="PreviousYear" component={PreviousYearScreen} />
                     </>
                 )}
             </Stack.Navigator>
