@@ -39,7 +39,7 @@ export const getUserStats = async (uid) => {
     const totalQuestions = results.reduce((sum, r) => sum + (r.total || 0), 0);
     return {
         lastScore: results[0]?.score || 0,
-        lastTotal: results[0]?.total || 0,
+        lastTotal: results[0]?.totalMarks || 0,
         totalTests: results.length,
         accuracy: totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0,
     };
