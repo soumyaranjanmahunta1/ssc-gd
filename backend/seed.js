@@ -1,215 +1,214 @@
-/**
- * SSC GD Mock Test – Seed Script
- * Seeds Mock Test 1 (80 questions) + Mock Test 2 (80 questions)
- * Run: node seed.js
- */
-const mongoose = require('mongoose');
 require('dotenv').config();
+const mongoose = require('mongoose');
 const Question = require('./models/Question');
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/sscgd';
+const q = (question, options, answer, explanation, subject, chapter) =>
+    ({ question, options, answer, explanation, subject, chapter, difficulty: 'Medium', isActive: true });
 
-// ─── MOCK TEST 1 — 80 Questions (20 GK + 20 Math + 20 Reasoning + 20 English) ──
-const mockTest1 = [
-    // ── GK (20) ──
-    { question: 'Which is the largest continent in the world?', options: ['Africa', 'Asia', 'North America', 'Antarctica'], answer: 'Asia', explanation: 'Asia is the largest continent in area and population.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'The currency of Japan is:', options: ['Yuan', 'Won', 'Yen', 'Ringgit'], answer: 'Yen', explanation: 'The Yen is the official currency of Japan.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Who was the first woman Prime Minister of India?', options: ['Pratibha Patil', 'Indira Gandhi', 'Sushma Swaraj', 'Sarojini Naidu'], answer: 'Indira Gandhi', explanation: 'Indira Gandhi served as the first female PM of India.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Which gas is most abundant in the Earth\'s atmosphere?', options: ['Oxygen', 'Hydrogen', 'Nitrogen', 'Carbon Dioxide'], answer: 'Nitrogen', explanation: 'Nitrogen makes up about 78% of the atmosphere.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'ISRO headquarters is located in:', options: ['Mumbai', 'Chennai', 'Bengaluru', 'New Delhi'], answer: 'Bengaluru', explanation: 'ISRO is headquartered in Bengaluru, Karnataka.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Which planet is known as the "Morning Star"?', options: ['Mars', 'Venus', 'Mercury', 'Jupiter'], answer: 'Venus', explanation: 'Venus is visible in the morning sky and called the Morning Star.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Who is the author of "Discovery of India"?', options: ['Mahatma Gandhi', 'Jawaharlal Nehru', 'Rabindranath Tagore', 'Sardar Patel'], answer: 'Jawaharlal Nehru', explanation: 'Nehru wrote The Discovery of India while imprisoned at Ahmednagar Fort.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Which instrument is used to measure blood pressure?', options: ['Thermometer', 'Barometer', 'Sphygmomanometer', 'Stethoscope'], answer: 'Sphygmomanometer', explanation: 'A sphygmomanometer measures arterial blood pressure.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'In which year did the First World War begin?', options: ['1912', '1914', '1918', '1939'], answer: '1914', explanation: 'World War I began on July 28, 1914.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'The "Statue of Liberty" was a gift to USA from which country?', options: ['UK', 'France', 'Germany', 'Spain'], answer: 'France', explanation: 'France gifted the Statue of Liberty to the United States.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Which vitamin is essential for blood clotting?', options: ['Vitamin A', 'Vitamin C', 'Vitamin D', 'Vitamin K'], answer: 'Vitamin K', explanation: 'Vitamin K plays a vital role in blood coagulation (clotting).', subject: 'GK', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'The Quit India Movement was started in which year?', options: ['1940', '1942', '1945', '1947'], answer: '1942', explanation: 'Mahatma Gandhi launched the Quit India Movement in August 1942.', subject: 'GK', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'Which layer of atmosphere contains the Ozone layer?', options: ['Troposphere', 'Stratosphere', 'Mesosphere', 'Thermosphere'], answer: 'Stratosphere', explanation: 'The ozone layer is in the stratosphere and protects us from UV radiation.', subject: 'GK', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'Which is the highest waterfall in the world?', options: ['Niagara Falls', 'Angel Falls', 'Victoria Falls', 'Iguazu Falls'], answer: 'Angel Falls', explanation: 'Angel Falls in Venezuela is the world\'s highest uninterrupted waterfall (979 m).', subject: 'GK', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Who invented the Light Bulb?', options: ['Nikola Tesla', 'Thomas Edison', 'Alexander Graham Bell', 'Albert Einstein'], answer: 'Thomas Edison', explanation: 'Thomas Edison invented the first commercially practical incandescent light bulb.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Which is the largest animal on Earth?', options: ['African Elephant', 'Blue Whale', 'Colossal Squid', 'Giraffe'], answer: 'Blue Whale', explanation: 'The Blue Whale is the largest animal ever known to have existed on Earth.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'The capital of Germany is:', options: ['Munich', 'Frankfurt', 'Berlin', 'Hamburg'], answer: 'Berlin', explanation: 'Berlin is the capital and largest city of Germany.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Who was the first human to travel into space?', options: ['Neil Armstrong', 'Yuri Gagarin', 'Buzz Aldrin', 'Rakesh Sharma'], answer: 'Yuri Gagarin', explanation: 'Yuri Gagarin became the first human in space in 1961.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Which is the deepest lake in the world?', options: ['Lake Superior', 'Lake Victoria', 'Lake Baikal', 'Lake Tanganyika'], answer: 'Lake Baikal', explanation: 'Lake Baikal in Siberia, Russia, is the world\'s deepest lake.', subject: 'GK', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'Who is known as the "Father of Medicine"?', options: ['Aristotle', 'Hippocrates', 'Socrates', 'Plato'], answer: 'Hippocrates', explanation: 'Hippocrates is considered the founding figure of medicine.', subject: 'GK', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
+const questions = [
+    // ── REASONING ──────────────────────────────────────────────────────────────
+    q('Book : Library :: Painting : ?', ['Museum', 'Gallery', 'Artist', 'Canvas'], 'Gallery', 'A book is kept in a library; a painting is kept in a gallery.', 'Reasoning', 'Analogy'),
+    q('Doctor : Hospital :: Teacher : ?', ['College', 'School', 'Office', 'Clinic'], 'School', 'A doctor works in a hospital; a teacher works in a school.', 'Reasoning', 'Analogy'),
 
-    // ── Math (20) ──
-    { question: 'The average of first five prime numbers is:', options: ['5.2', '5.4', '5.6', '5.8'], answer: '5.6', explanation: 'First 5 primes: 2,3,5,7,11. Sum=28. Average=28/5=5.6.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'If 20% of a number is 80, what is 50% of that number?', options: ['160', '200', '240', '250'], answer: '200', explanation: 'If 0.2x=80, x=400. 50% of 400=200.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'The simple interest on ₹5000 at 5% for 2 years is:', options: ['₹400', '₹500', '₹600', '₹750'], answer: '₹500', explanation: 'SI=(P×R×T)/100=(5000×5×2)/100=₹500.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'A car covers 120 km in 3 hours. Its speed in m/s is:', options: ['10 m/s', '11.11 m/s', '12.5 m/s', '15 m/s'], answer: '11.11 m/s', explanation: 'Speed=40 km/h. 40×5/18≈11.11 m/s.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'The HCF of 24, 36 and 48 is:', options: ['6', '8', '12', '18'], answer: '12', explanation: '12 is the highest number dividing 24, 36, and 48 exactly.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'A person buys for ₹300 and sells for ₹360. Profit % is:', options: ['15%', '20%', '25%', '30%'], answer: '20%', explanation: 'Profit=₹60. Profit%=(60/300)×100=20%.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'The sum of first 50 natural numbers is:', options: ['1225', '1275', '1300', '2550'], answer: '1275', explanation: 'Sum=n(n+1)/2=50×51/2=1275.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'What is 5! (5 factorial)?', options: ['60', '100', '120', '150'], answer: '120', explanation: '5!=5×4×3×2×1=120.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'A circle has radius 7 cm. Its circumference is (π=22/7):', options: ['22 cm', '44 cm', '88 cm', '154 cm'], answer: '44 cm', explanation: 'Circumference=2πr=2×(22/7)×7=44 cm.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Solve for x: 3(x − 4) = 15', options: ['7', '8', '9', '10'], answer: '9', explanation: '3x−12=15 → 3x=27 → x=9.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'The area of a rectangle with length 10m and width 5m is:', options: ['15 m²', '30 m²', '50 m²', '60 m²'], answer: '50 m²', explanation: 'Area=length×width=10×5=50 m².', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'The volume of a cuboid with dimensions 3, 4 and 5 cm is:', options: ['12 cm³', '20 cm³', '60 cm³', '70 cm³'], answer: '60 cm³', explanation: 'Volume=3×4×5=60 cm³.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Which of the following is a prime number?', options: ['91', '93', '97', '99'], answer: '97', explanation: '97 has no factors other than 1 and itself.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'What is 25% of 500?', options: ['100', '125', '150', '200'], answer: '125', explanation: '25% of 500=(25/100)×500=125.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Convert 54 km/h into m/s:', options: ['10 m/s', '15 m/s', '18 m/s', '20 m/s'], answer: '15 m/s', explanation: '54×(5/18)=15 m/s.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'The ratio of boys to girls is 4:5. If boys=20, girls are:', options: ['20', '25', '30', '35'], answer: '25', explanation: '4 units=20, 1 unit=5. Girls=5×5=25.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Solve: 2x + 7 = 15', options: ['2', '4', '6', '8'], answer: '4', explanation: '2x=8 → x=4.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'The mean of first ten natural numbers is:', options: ['5', '5.5', '6', '6.5'], answer: '5.5', explanation: 'Sum=55. Mean=55/10=5.5.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'A triangle has angles in ratio 1:2:3. The smallest angle is:', options: ['20°', '30°', '45°', '60°'], answer: '30°', explanation: '1x+2x+3x=180 → x=30°.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Volume of a cube with side 4 cm is:', options: ['16 cm³', '32 cm³', '64 cm³', '96 cm³'], answer: '64 cm³', explanation: 'Volume=4³=64 cm³.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
+    q('Find the odd one: Dog, Cat, Crow, Cow', ['Dog', 'Cat', 'Crow', 'Cow'], 'Crow', 'Crow is a bird; all others are mammals.', 'Reasoning', 'Similarities and Differences'),
+    q('Find the odd one: Rose, Lotus, Mango, Tulip', ['Rose', 'Lotus', 'Mango', 'Tulip'], 'Mango', 'Mango is a fruit; all others are flowers.', 'Reasoning', 'Similarities and Differences'),
 
-    // ── Reasoning (20) ──
-    { question: 'Complete the pattern: 1, 4, 9, 16, ?', options: ['20', '24', '25', '30'], answer: '25', explanation: 'Series of squares: 1²,2²,3²,4². Next is 5²=25.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'If "Red" is called "Blue", "Blue" is called "Green", what is the color of the sky?', options: ['Blue', 'Green', 'Yellow', 'Red'], answer: 'Green', explanation: 'Sky is Blue. In this code, Blue is called Green.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Complete the series: 100, 90, 81, 73, ?', options: ['65', '66', '67', '68'], answer: '66', explanation: 'Differences: -10,-9,-8,-7. 73-7=66.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'ODD one out: Lion, Tiger, Leopard, Elephant', options: ['Lion', 'Tiger', 'Leopard', 'Elephant'], answer: 'Elephant', explanation: 'Elephant is a herbivore; others are carnivores from the cat family.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Sun : Heat :: Moon : ?', options: ['Star', 'Light', 'Reflection', 'Darkness'], answer: 'Light', explanation: 'Sun provides heat; Moon provides light.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'If MONDAY is the 1st day of the month, which day is the 15th?', options: ['Monday', 'Tuesday', 'Sunday', 'Saturday'], answer: 'Monday', explanation: 'Days repeat every 7 days. 1st, 8th, 15th are all the same day.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Neha said: "His brother is the only son of my father." How is Neha related to him?', options: ['Mother', 'Sister', 'Daughter', 'Aunt'], answer: 'Sister', explanation: 'Only son of Neha\'s father is Neha\'s brother → they are siblings.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Book : Page :: Flower : ?', options: ['Petal', 'Fruit', 'Seed', 'Leaf'], answer: 'Petal', explanation: 'A book is made of pages; a flower is made of petals.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Find the next term: B2, D4, F6, ?', options: ['G7', 'H8', 'I9', 'J10'], answer: 'H8', explanation: 'Letters skip one: B,D,F,H. Numbers: 2,4,6,8.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'If 5 + 3 = 28, 9 + 1 = 810, then 7 + 4 = ?', options: ['311', '113', '283', '312'], answer: '311', explanation: '(7-4)=3 and (7+4)=11 → 311.', subject: 'Reasoning', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'A clock shows 3:00. Angle between hands is:', options: ['60°', '90°', '120°', '180°'], answer: '90°', explanation: 'Each hour gap is 30°. 3×30°=90°.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Point: Ravi says "He is the son of my father\'s only brother." How is the man related to Ravi?', options: ['Brother', 'Nephew', 'Cousin', 'Uncle'], answer: 'Cousin', explanation: 'Son of father\'s brother is a cousin.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Find next in series: 1, 8, 27, 64, ?', options: ['100', '121', '125', '144'], answer: '125', explanation: 'Cubes: 1³,2³,3³,4³. Next is 5³=125.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Statement: All books are pens. All pens are pencils. Conclusion: All books are pencils.', options: ['Follows', 'Does not follow', 'Partially follows', 'None'], answer: 'Follows', explanation: 'If all A are B and all B are C, then all A are C.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'ODD one out: Red, Blue, Yellow, Pencil', options: ['Red', 'Blue', 'Yellow', 'Pencil'], answer: 'Pencil', explanation: 'Red, Blue, Yellow are colors; Pencil is a writing instrument.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Dog : Bark :: Cat : ?', options: ['Roar', 'Moo', 'Meow', 'Bleat'], answer: 'Meow', explanation: 'Bark is the sound of a dog; Meow is the sound of a cat.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'If day after tomorrow is Sunday, what day was yesterday?', options: ['Wednesday', 'Thursday', 'Friday', 'Saturday'], answer: 'Thursday', explanation: 'Day after tomorrow=Sunday → Tomorrow=Saturday → Today=Friday → Yesterday=Thursday.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'In a class of 40, Rahul is 15th from top. Rank from bottom is:', options: ['25', '26', '27', '28'], answer: '26', explanation: 'Rank from bottom=(40-15)+1=26.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Find missing: 4, 9, 20, 43, ?', options: ['86', '90', '92', '95'], answer: '90', explanation: 'Pattern: n×2+1: 4×2+1=9, 9×2+2=20, 20×2+3=43, 43×2+4=90.', subject: 'Reasoning', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'ACEG : BDFH :: PRTV : ?', options: ['QSUX', 'QSUW', 'QSTW', 'RSUV'], answer: 'QSUW', explanation: 'Each letter is shifted by +1: P+1=Q, R+1=S, T+1=U, V+1=W.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
+    q('How many edges does a cube have?', ['8', '10', '12', '14'], '12', 'A cube has 12 edges, 8 vertices and 6 faces.', 'Reasoning', 'Spatial Visualization'),
+    q('How many small cubes are in a 3x3x3 cube?', ['9', '18', '27', '36'], '27', '3x3x3 = 27 unit cubes.', 'Reasoning', 'Spatial Visualization'),
 
-    // ── English (20) ──
-    { question: 'Fill in: Neither of the two boys _____ present.', options: ['are', 'were', 'was', 'have been'], answer: 'was', explanation: '"Neither of" takes a singular verb.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Synonym of "ABANDON":', options: ['Keep', 'Forsake', 'Support', 'Cherish'], answer: 'Forsake', explanation: 'Abandon and Forsake both mean to leave or desert.', subject: 'English', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Antonym of "FRAGILE":', options: ['Weak', 'Robust', 'Brittle', 'Delicate'], answer: 'Robust', explanation: 'Fragile means easily broken; Robust means strong.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Change to Indirect: He said, "I am busy."', options: ['He said that he was busy.', 'He says that he is busy.', 'He said he is busy.', 'He told he was busy.'], answer: 'He said that he was busy.', explanation: 'Present simple → past simple in indirect speech.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Meaning of "Piece of cake":', options: ['Delicious food', 'Something very easy', 'A small portion', 'To celebrate'], answer: 'Something very easy', explanation: '"Piece of cake" means a very easy task.', subject: 'English', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'One word substitution: A person who loves books.', options: ['Bibliophile', 'Philanthropist', 'Polyglot', 'Misanthrope'], answer: 'Bibliophile', explanation: 'A bibliophile is a person who loves collecting books.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Fill in: I am looking forward to _____ you.', options: ['meet', 'meeting', 'met', 'be meeting'], answer: 'meeting', explanation: '"Look forward to" is followed by the gerund (-ing) form.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Find the error: "The sceneries of Kashmir are beautiful."', options: ['The sceneries', 'of Kashmir', 'are beautiful', 'No error'], answer: 'The sceneries', explanation: '"Scenery" is uncountable and has no plural form.', subject: 'English', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'Collective noun for birds:', options: ['Flock', 'Herd', 'Pack', 'School'], answer: 'Flock', explanation: 'A group of birds is called a flock.', subject: 'English', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Identify the Tense: "I have been writing for two hours."', options: ['Present Perfect', 'Present Perfect Continuous', 'Past Perfect Continuous', 'Future Perfect'], answer: 'Present Perfect Continuous', explanation: '"Have been + verb-ing" is Present Perfect Continuous.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Antonym of "OPTIMIST":', options: ['Positivist', 'Pessimist', 'Realist', 'Idealist'], answer: 'Pessimist', explanation: 'Optimist looks at the bright side; Pessimist at the dark side.', subject: 'English', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Meaning of "Break the ice":', options: ['To start a fire', 'To start a conversation', 'To end a relationship', 'To cause trouble'], answer: 'To start a conversation', explanation: 'Break the ice means to relieve tension or start a conversation.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Fill in: If I _____ you, I would not do that.', options: ['am', 'was', 'were', 'had been'], answer: 'were', explanation: 'In subjunctive mood, "were" is used for all persons.', subject: 'English', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'Correct spelling:', options: ['Recieve', 'Receive', 'Receeve', 'Receieve'], answer: 'Receive', explanation: '"i before e except after c" — so Receive is correct.', subject: 'English', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Which is in Future Continuous tense?', options: ['I will go', 'I will have gone', 'I will be going', 'I would go'], answer: 'I will be going', explanation: 'Future Continuous = "will be" + verb-ing.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'Fill in: The book is _____ the table.', options: ['in', 'at', 'on', 'with'], answer: 'on', explanation: '"on" denotes surface contact.', subject: 'English', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Which article before "Eiffel Tower"?', options: ['A', 'An', 'The', 'No article'], answer: 'The', explanation: 'Definite article "The" is used before unique monuments.', subject: 'English', difficulty: 'Easy', mockTestNumber: 1, isActive: true },
-    { question: 'Find the error: "Each of the students have finished the test."', options: ['Each of', 'the students', 'have finished', 'No error'], answer: 'have finished', explanation: '"Each" is singular; should be "has finished".', subject: 'English', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
-    { question: 'Change to Passive: "She sings a song."', options: ['A song is sung by her.', 'A song was sung by her.', 'A song has been sung by her.', 'A song is being sung by her.'], answer: 'A song is sung by her.', explanation: 'Object becomes subject; "is sung" is present passive.', subject: 'English', difficulty: 'Medium', mockTestNumber: 1, isActive: true },
-    { question: 'What is the meaning of "AMNESTY"?', options: ['Enemy', 'Official pardon', 'Anger', 'Friendship'], answer: 'Official pardon', explanation: 'Amnesty is an official pardon for political offenses.', subject: 'English', difficulty: 'Hard', mockTestNumber: 1, isActive: true },
+    q('A pattern shows: 1, 3, 6, 10, ?', ['13', '14', '15', '16'], '15', 'Triangular numbers: each adds one more. 10+5=15.', 'Reasoning', 'Visual Memory'),
+    q('Series: 2, 4, 7, 11, 16, ?', ['20', '21', '22', '23'], '22', 'Differences: 2,3,4,5,6 — next difference is 6, so 16+6=22.', 'Reasoning', 'Visual Memory'),
+
+    q('A is the father of B. C is the mother of A. What is C to B?', ['Mother', 'Grandmother', 'Aunt', 'Sister'], 'Grandmother', 'C is A\'s mother and A is B\'s father, so C is B\'s grandmother.', 'Reasoning', 'Blood Relations'),
+    q('X\'s mother is Y. Z is Y\'s father. What is Z to X?', ['Uncle', 'Grandfather', 'Father', 'Brother'], 'Grandfather', 'Z is mother\'s father = maternal grandfather.', 'Reasoning', 'Blood Relations'),
+
+    q('Ram walks 5 km North then 3 km East. Which direction from start?', ['North-East', 'North-West', 'South-East', 'South-West'], 'North-East', 'Moving North then East puts him in the North-East direction.', 'Reasoning', 'Direction Sense'),
+    q('A man facing East turns 90 degrees clockwise. Which direction now?', ['North', 'South', 'West', 'East'], 'South', 'East + 90 degrees clockwise = South.', 'Reasoning', 'Direction Sense'),
+
+    q('If CAT=24, DOG=26, then RAT=?', ['37', '38', '39', '40'], '39', 'Sum of positions: R(18)+A(1)+T(20)=39.', 'Reasoning', 'Coding-Decoding'),
+    q('If APPLE is coded as BQQMF, then MANGO is coded as?', ['NBOHP', 'NBOIP', 'MBOHP', 'NBNHP'], 'NBOHP', 'Each letter is replaced by the next letter in the alphabet.', 'Reasoning', 'Coding-Decoding'),
+
+    q('Next number: 2, 4, 8, 16, ?', ['24', '28', '32', '36'], '32', 'Each number is doubled: 16x2=32.', 'Reasoning', 'Series'),
+    q('Next number: 1, 4, 9, 16, 25, ?', ['30', '35', '36', '42'], '36', 'Perfect squares: 6 squared = 36.', 'Reasoning', 'Series'),
+
+    q('30 students in a class, 1/3 are girls. How many boys?', ['10', '15', '20', '25'], '20', '1/3 of 30 = 10 girls; 30-10 = 20 boys.', 'Reasoning', 'Arithmetical Reasoning'),
+    q('A has Rs 500 and spends Rs 150. What fraction remains?', ['1/2', '7/10', '3/10', '2/5'], '7/10', 'Rs 350 remains out of Rs 500 = 7/10.', 'Reasoning', 'Arithmetical Reasoning'),
+
+    q('Which figure has all sides equal AND all angles 90 degrees?', ['Rectangle', 'Rhombus', 'Square', 'Parallelogram'], 'Square', 'A square has all sides equal and all angles = 90 degrees.', 'Reasoning', 'Figural Classification'),
+    q('Which shape has exactly 3 sides?', ['Pentagon', 'Hexagon', 'Triangle', 'Quadrilateral'], 'Triangle', 'A triangle has 3 sides.', 'Reasoning', 'Figural Classification'),
+
+    q('Odd one out: January, March, April, July', ['January', 'March', 'April', 'July'], 'April', 'April has 30 days; all others have 31 days.', 'Reasoning', 'Odd One Out'),
+    q('Odd one out: 2, 3, 5, 9, 11', ['2', '3', '9', '11'], '9', '9 is not prime (3x3=9); all others are prime.', 'Reasoning', 'Odd One Out'),
+
+    q('All dogs are mammals. Some dogs are pets. Conclusion: Some pets are mammals.', ['True', 'False', 'Cannot determine', 'None of these'], 'True', 'Some pet-dogs are mammals since all dogs are mammals.', 'Reasoning', 'Syllogism'),
+    q('All birds can fly. Penguin is a bird. Conclusion: Penguin can fly.', ['True', 'False', 'Uncertain', 'None of these'], 'True', 'Based purely on given premises the conclusion follows logically.', 'Reasoning', 'Syllogism'),
+
+    q('A number divided by 5 gives remainder 3 and by 7 gives remainder 5. Find the number.', ['33', '38', '43', '48'], '33', '33/5=6 rem 3 and 33/7=4 rem 5.', 'Reasoning', 'Puzzles'),
+    q('If 2+3=10, 7+2=63, 6+5=66, then 8+4=?', ['80', '88', '96', '104'], '96', 'Pattern: A x (A+B). 8 x (8+4) = 8 x 12 = 96.', 'Reasoning', 'Puzzles'),
+
+    q('A, B, C, D sit in a row. A is left of B. C is right of B. D is right of C. Who is rightmost?', ['A', 'B', 'C', 'D'], 'D', 'Order: A-B-C-D. D is at the rightmost position.', 'Reasoning', 'Seating Arrangement'),
+    q('6 people sit in a row. X is at one end, Y is next to X. Who is X\'s neighbour?', ['X', 'Y', 'Z', 'Cannot determine'], 'Y', 'Y is stated to be next to X.', 'Reasoning', 'Seating Arrangement'),
+
+    q('Time in a mirror shows 4:30. What is the actual time?', ['7:00', '7:30', '8:00', '8:30'], '7:30', 'Mirror time = 12:00 minus 4:30 = 7:30.', 'Reasoning', 'Mirror and Water Images'),
+    q('In a water image, which direction is flipped?', ['Left-Right', 'Top-Bottom', 'Both', 'None'], 'Top-Bottom', 'Water images flip the image vertically (Top-Bottom).', 'Reasoning', 'Mirror and Water Images'),
+
+    q('A square paper is folded once and a hole is punched. How many holes after unfolding?', ['1', '2', '3', '4'], '2', 'One fold creates a mirror hole on the other half = 2 holes.', 'Reasoning', 'Paper Folding and Cutting'),
+    q('A paper folded twice and cut at the corner. How many holes after unfolding?', ['1', '2', '4', '8'], '4', 'Two folds create 4 symmetrical cuts when unfolded.', 'Reasoning', 'Paper Folding and Cutting'),
+
+    // ── GENERAL AWARENESS ──────────────────────────────────────────────────────
+    q('Who was the first Governor General of India?', ['Lord Mountbatten', 'Warren Hastings', 'Lord Dalhousie', 'Lord Curzon'], 'Warren Hastings', 'Warren Hastings was the first Governor General of Bengal (1772).', 'GK', 'History'),
+    q('The Battle of Plassey was fought in which year?', ['1757', '1764', '1775', '1800'], '1757', 'Battle of Plassey (1757) — British East India Company defeated Siraj ud-Daulah.', 'GK', 'History'),
+
+    q('Which is the longest river in India?', ['Yamuna', 'Ganga', 'Godavari', 'Brahmaputra'], 'Ganga', 'The Ganga (2525 km) is the longest river originating in India.', 'GK', 'Geography'),
+    q('Mount Everest is located in which country?', ['India', 'China', 'Nepal', 'Bhutan'], 'Nepal', 'Mount Everest summit lies in Nepal.', 'GK', 'Geography'),
+
+    q('How many articles did the Indian Constitution originally contain?', ['395', '400', '448', '450'], '395', 'The original Constitution had 395 articles, 8 schedules and 22 parts.', 'GK', 'Indian Polity'),
+    q('Who is the constitutional head of India?', ['Prime Minister', 'President', 'Chief Justice', 'Speaker'], 'President', 'The President of India is the constitutional head of state.', 'GK', 'Indian Polity'),
+
+    q('What does GDP stand for?', ['Gross Domestic Product', 'General Domestic Product', 'Gross Development Product', 'Global Domestic Product'], 'Gross Domestic Product', 'GDP = total value of goods/services produced in a country.', 'GK', 'Economy'),
+    q('Which is the central bank of India?', ['SBI', 'RBI', 'PNB', 'HDFC'], 'RBI', 'The Reserve Bank of India (RBI) is the central bank established in 1935.', 'GK', 'Economy'),
+
+    q('What is the chemical formula of water?', ['H2O', 'CO2', 'O2', 'H2O2'], 'H2O', 'Water is composed of 2 hydrogen atoms and 1 oxygen atom.', 'GK', 'General Science'),
+    q('Which planet is known as the Red Planet?', ['Venus', 'Mars', 'Jupiter', 'Saturn'], 'Mars', 'Mars appears red due to iron oxide on its surface.', 'GK', 'General Science'),
+
+    q('Which gas is mainly responsible for the greenhouse effect?', ['Oxygen', 'Nitrogen', 'Carbon Dioxide', 'Hydrogen'], 'Carbon Dioxide', 'CO2 traps heat in the atmosphere causing the greenhouse effect.', 'GK', 'Environment'),
+    q('What does WWF stand for?', ['World Wildlife Fund', 'World War Fund', 'World Welfare Federation', 'Wildlife World Fund'], 'World Wildlife Fund', 'WWF = World Wildlife Fund (now World Wide Fund for Nature).', 'GK', 'Environment'),
+
+    q('Which classical dance is associated with Kerala?', ['Bharatanatyam', 'Kathak', 'Kathakali', 'Odissi'], 'Kathakali', 'Kathakali is the classical dance-drama of Kerala.', 'GK', 'Culture'),
+    q('Which festival is known as the Festival of Lights?', ['Holi', 'Diwali', 'Eid', 'Pongal'], 'Diwali', 'Diwali (Deepawali) is celebrated with lamps.', 'GK', 'Culture'),
+
+    q('How many players are there in a cricket team?', ['9', '10', '11', '12'], '11', 'A cricket team has 11 players on the field.', 'GK', 'Sports'),
+    q('The term "Grand Slam" is associated with which sport?', ['Cricket', 'Tennis', 'Football', 'Hockey'], 'Tennis', 'Grand Slam in tennis = winning all four major tournaments in a year.', 'GK', 'Sports'),
+
+    q('Where are the 2028 Summer Olympics to be held?', ['Paris', 'Los Angeles', 'Brisbane', 'Tokyo'], 'Los Angeles', 'The 2028 Summer Olympics will be held in Los Angeles, USA.', 'GK', 'Current Affairs'),
+    q('Who is the Prime Minister of India (2025)?', ['Narendra Modi', 'Amit Shah', 'Rahul Gandhi', 'Arvind Kejriwal'], 'Narendra Modi', 'Narendra Modi has been Prime Minister since May 2014.', 'GK', 'Current Affairs'),
+
+    q('What is the national flower of India?', ['Rose', 'Lotus', 'Sunflower', 'Marigold'], 'Lotus', 'The Lotus is the national flower of India.', 'GK', 'Static GK'),
+    q('Which is the largest state of India by area?', ['Maharashtra', 'Rajasthan', 'Uttar Pradesh', 'Madhya Pradesh'], 'Rajasthan', 'Rajasthan (342239 km2) is the largest state of India by area.', 'GK', 'Static GK'),
+
+    // ── MATHEMATICS ────────────────────────────────────────────────────────────
+    q('What is the LCM of 12 and 18?', ['24', '36', '48', '72'], '36', 'LCM(12,18) = 36.', 'Math', 'Number System'),
+    q('Which is the smallest prime number?', ['0', '1', '2', '3'], '2', '2 is the smallest and only even prime number.', 'Math', 'Number System'),
+
+    q('What is 0.25 as a fraction?', ['1/2', '1/4', '1/5', '1/8'], '1/4', '0.25 = 25/100 = 1/4.', 'Math', 'Decimals and Fractions'),
+    q('Which is greater: 3/4 or 5/7?', ['3/4', '5/7', 'Both equal', 'Cannot compare'], '3/4', '3/4=0.75 and 5/7=0.714, so 3/4 is greater.', 'Math', 'Decimals and Fractions'),
+
+    q('What is 20% of 500?', ['50', '80', '100', '120'], '100', '20/100 x 500 = 100.', 'Math', 'Percentage'),
+    q('A price increased from Rs 200 to Rs 250. Percentage increase?', ['20%', '25%', '30%', '15%'], '25%', 'Increase=50; % = (50/200)x100 = 25%.', 'Math', 'Percentage'),
+
+    q('If A:B = 2:3 and B:C = 4:5, find A:C.', ['8:15', '4:9', '6:10', '2:5'], '8:15', 'A:B:C = 8:12:15, so A:C = 8:15.', 'Math', 'Ratio and Proportion'),
+    q('Two numbers in ratio 3:5 have sum 48. Find the larger number.', ['18', '24', '30', '36'], '30', '8x=48, x=6; larger=5x6=30.', 'Math', 'Ratio and Proportion'),
+
+    q('Average of 5 numbers is 20. What is their sum?', ['80', '100', '120', '60'], '100', 'Sum = Average x Count = 20x5 = 100.', 'Math', 'Average'),
+    q('Average of first 10 natural numbers?', ['5', '5.5', '6', '4.5'], '5.5', 'Sum=55; Average=55/10=5.5.', 'Math', 'Average'),
+
+    q('CP=Rs 500, SP=Rs 600. Profit percentage?', ['15%', '20%', '25%', '10%'], '20%', 'Profit=100; %=(100/500)x100=20%.', 'Math', 'Profit and Loss'),
+    q('Shopkeeper sells at 10% loss. CP=Rs 400. Find SP.', ['Rs 340', 'Rs 350', 'Rs 360', 'Rs 380'], 'Rs 360', 'SP = 400 x 0.90 = Rs 360.', 'Math', 'Profit and Loss'),
+
+    q('P=Rs 1000, R=5% p.a., T=2 years. Find SI.', ['Rs 50', 'Rs 100', 'Rs 150', 'Rs 200'], 'Rs 100', 'SI=(PxRxT)/100=(1000x5x2)/100=Rs 100.', 'Math', 'Simple Interest'),
+    q('In how many years will Rs 1000 double at 10% SI?', ['5', '8', '10', '12'], '10', 'SI=Principal when doubled; 1000=(1000x10xT)/100; T=10 years.', 'Math', 'Simple Interest'),
+
+    q('A can do a job in 10 days, B in 20 days. Together in how many days?', ['5', '6.67', '7', '8'], '6.67', 'Combined rate=1/10+1/20=3/20. Days=20/3=6.67.', 'Math', 'Time and Work'),
+    q('5 workers complete a job in 8 days. How many days for 10 workers?', ['2', '4', '6', '8'], '4', '5x8=10xD; D=4 days.', 'Math', 'Time and Work'),
+
+    q('Speed=60 km/h, Time=2 hours. Distance?', ['100 km', '110 km', '120 km', '130 km'], '120 km', 'Distance=Speedx Time=60x2=120 km.', 'Math', 'Time and Distance'),
+    q('A 100m train passes a pole in 10 seconds. Speed in km/h?', ['30', '36', '40', '45'], '36', 'Speed=100/10=10 m/s=36 km/h.', 'Math', 'Time and Distance'),
+
+    q('Area of rectangle: length=10 cm, breadth=5 cm.', ['25 cm2', '40 cm2', '50 cm2', '60 cm2'], '50 cm2', 'Area=LxB=10x5=50 cm2.', 'Math', 'Mensuration'),
+    q('Perimeter of a square with side 6 cm?', ['12 cm', '24 cm', '30 cm', '36 cm'], '24 cm', 'Perimeter=4xside=4x6=24 cm.', 'Math', 'Mensuration'),
+
+    q('If x+5=12, find x.', ['5', '6', '7', '8'], '7', 'x=12-5=7.', 'Math', 'Algebra'),
+    q('Simplify: 2x+3x-x', ['3x', '4x', '5x', '6x'], '4x', '2x+3x-x=4x.', 'Math', 'Algebra'),
+
+    q('Sum of interior angles of a triangle?', ['90', '180', '270', '360'], '180', 'Sum of angles in any triangle=180 degrees.', 'Math', 'Geometry'),
+    q('Circumference of a circle with radius 7 cm (pi=22/7)?', ['22 cm', '33 cm', '44 cm', '66 cm'], '44 cm', 'C=2xpixr=2x(22/7)x7=44 cm.', 'Math', 'Geometry'),
+
+    q('Bar chart: Math=80, Science=70, English=60. Average marks?', ['60', '65', '70', '75'], '70', 'Average=(80+70+60)/3=210/3=70.', 'Math', 'Data Interpretation'),
+    q('Pie chart: Sports=25%, Studies=30%, TV=20%, Sleep=?', ['20%', '25%', '30%', '35%'], '25%', '100-25-30-20=25% for Sleep.', 'Math', 'Data Interpretation'),
+
+    // ── ENGLISH ────────────────────────────────────────────────────────────────
+    q('Passage: "The boy ran quickly to reach school on time." Why did the boy run?', ['For exercise', 'To reach school on time', 'To catch a bus', 'For fun'], 'To reach school on time', 'The passage directly states the reason.', 'English', 'Reading Comprehension'),
+    q('The word "comprehension" means:', ['Writing', 'Understanding', 'Speaking', 'Listening'], 'Understanding', 'Comprehension = the ability to understand something.', 'English', 'Reading Comprehension'),
+
+    q('Choose the grammatically correct sentence:', ['She go to school', 'She goes to school', 'She going to school', 'She gone to school'], 'She goes to school', 'Third person singular (She) takes verb+s in present tense.', 'English', 'Grammar'),
+    q('What is the past tense of "write"?', ['Writed', 'Written', 'Wrote', 'Writes'], 'Wrote', '"Wrote" is the simple past tense of "write".', 'English', 'Grammar'),
+
+    q('Meaning of "benevolent":', ['Cruel', 'Kind', 'Angry', 'Sad'], 'Kind', 'Benevolent means well-meaning and kindly.', 'English', 'Vocabulary'),
+    q('"Diligent" means:', ['Lazy', 'Hardworking', 'Careless', 'Rude'], 'Hardworking', 'Diligent = showing care and effort in work.', 'English', 'Vocabulary'),
+
+    q('Synonym of "Happy":', ['Sad', 'Joyful', 'Angry', 'Tired'], 'Joyful', 'Joyful is a synonym of happy.', 'English', 'Synonyms'),
+    q('Synonym of "Brave":', ['Coward', 'Fearful', 'Courageous', 'Weak'], 'Courageous', 'Courageous and brave both mean willing to face danger.', 'English', 'Synonyms'),
+
+    q('Antonym of "Hot":', ['Warm', 'Cold', 'Cool', 'Humid'], 'Cold', 'Cold is the direct opposite of hot.', 'English', 'Antonyms'),
+    q('Antonym of "Victory":', ['Win', 'Success', 'Defeat', 'Champion'], 'Defeat', 'Defeat is the opposite of victory.', 'English', 'Antonyms'),
+
+    q('Find the error: "She dont like coffee."', ['She', 'dont', 'like', 'No error'], 'dont', 'With She (3rd person singular), use "doesn\'t" not "don\'t".', 'English', 'Error Spotting'),
+    q('Find the error: "He have two brothers."', ['He', 'have', 'two brothers', 'No error'], 'have', 'With He (3rd person singular), use "has" not "have".', 'English', 'Error Spotting'),
+
+    q('Correct: "She is more taller than her sister."', ['She is tallest', 'She is more tall', 'She is taller', 'She is most taller'], 'She is taller', 'Do not use "more" with comparative adjectives ending in -er.', 'English', 'Sentence Correction'),
+    q('Correct: "I am knowing him for years."', ['I knew him for years', 'I have known him for years', 'I known him for years', 'I know him for years'], 'I have known him for years', 'Use present perfect for actions continuing to the present.', 'English', 'Sentence Correction'),
+
+    q('She ___ to the market yesterday.', ['go', 'goes', 'went', 'going'], 'went', '"Yesterday" indicates past tense; use "went".', 'English', 'Fill in the Blanks'),
+    q('He is ___ honest man.', ['a', 'an', 'the', 'no article needed'], 'an', 'Use "an" before words starting with a vowel sound.', 'English', 'Fill in the Blanks'),
+
+    q('A student must work hard to ___ success.', ['lose', 'achieve', 'avoid', 'miss'], 'achieve', 'One works hard to achieve success.', 'English', 'Cloze Test'),
+    q('The weather was so ___ that we stayed indoors.', ['pleasant', 'terrible', 'bright', 'sunny'], 'terrible', 'Staying indoors implies bad/terrible weather.', 'English', 'Cloze Test'),
+
+    q('"Break the ice" means:', ['Start a conversation', 'Break something', 'Cool down', 'Fight'], 'Start a conversation', '"Break the ice" = do something to start a conversation and ease tension.', 'English', 'Idioms and Phrases'),
+    q('"Hit the books" means:', ['Beat someone', 'Study', 'Throw books', 'Damage books'], 'Study', '"Hit the books" is an idiom meaning to study.', 'English', 'Idioms and Phrases'),
+
+    q('Correctly spelled word:', ['Accomodation', 'Accommodation', 'Acommodation', 'Accomodattion'], 'Accommodation', 'Accommodation has double-c and double-m.', 'English', 'Spelling'),
+    q('Correctly spelled word:', ['Recieve', 'Receive', 'Receeve', 'Receve'], 'Receive', 'i before e except after c: Receive.', 'English', 'Spelling'),
+
+    q('Passive voice of "She writes a letter."', ['A letter is written by her', 'A letter was written by her', 'A letter has been written', 'A letter is being written'], 'A letter is written by her', 'Simple present active to passive: Object+is+V3+by+Subject.', 'English', 'Voice and Narration'),
+    q('Indirect speech: He said, "I am happy."', ['He said that he was happy', 'He said that I am happy', 'He told he is happy', 'He said he is happy'], 'He said that he was happy', 'Pronoun: I->he; tense shift: am->was.', 'English', 'Voice and Narration'),
+
+    // ── HINDI ──────────────────────────────────────────────────────────────────
+    q('"देव + आलय" की संधि से बना शब्द है:', ['देवालय', 'देवलय', 'देवाालय', 'देवआलय'], 'देवालय', 'अ + आ = आ (दीर्घ स्वर संधि): देव + आलय = देवालय।', 'Hindi', 'Sandhi evam Sandhi-Vichchhed'),
+    q('"नमस्ते" में कौन सी संधि है?', ['स्वर संधि', 'व्यंजन संधि', 'विसर्ग संधि', 'कोई नहीं'], 'विसर्ग संधि', 'नमः + ते = नमस्ते — विसर्ग संधि।', 'Hindi', 'Sandhi evam Sandhi-Vichchhed'),
+
+    q('"अनुचित" में उपसर्ग है:', ['अ', 'अन', 'अनु', 'उचित'], 'अनु', '"अनु" उपसर्ग + चित = अनुचित।', 'Hindi', 'Upsarg evam Pratyay'),
+    q('"लिखावट" में प्रत्यय है:', ['लिख', 'लिखा', 'आवट', 'वट'], 'आवट', 'लिख + आवट = लिखावट। "आवट" प्रत्यय है।', 'Hindi', 'Upsarg evam Pratyay'),
+
+    q('"सूर्य" का पर्यायवाची शब्द है:', ['चंद्र', 'भानु', 'तारा', 'नक्षत्र'], 'भानु', 'भानु, रवि, दिनकर — सूर्य के पर्यायवाची।', 'Hindi', 'Paryayvachi Shabd'),
+    q('"पानी" का पर्यायवाची शब्द है:', ['अग्नि', 'जल', 'वायु', 'पृथ्वी'], 'जल', 'जल, नीर, वारि — पानी के पर्यायवाची।', 'Hindi', 'Paryayvachi Shabd'),
+
+    q('"सुख" का विलोम शब्द है:', ['आनंद', 'खुशी', 'दुख', 'प्रसन्नता'], 'दुख', 'सुख का विपरीत दुख होता है।', 'Hindi', 'Vilom Shabd'),
+    q('"दिन" का विलोम शब्द है:', ['सुबह', 'शाम', 'रात', 'संध्या'], 'रात', 'दिन का विपरीत रात होता है।', 'Hindi', 'Vilom Shabd'),
+
+    q('"आँखें चुराना" मुहावरे का अर्थ है:', ['आँख निकालना', 'सामने न आना', 'देखना', 'रोना'], 'सामने न आना', 'आँखें चुराना = किसी से मिलने से बचना।', 'Hindi', 'Muhavare evam Lokoktiyan'),
+    q('"अक्ल पर पत्थर पड़ना" का अर्थ है:', ['पत्थर मारना', 'बुद्धि भ्रष्ट होना', 'चोट लगना', 'सोचना'], 'बुद्धि भ्रष्ट होना', 'अक्ल पर पत्थर पड़ना = बुद्धि का नष्ट होना।', 'Hindi', 'Muhavare evam Lokoktiyan'),
+
+    q('शुद्ध शब्द चुनें:', ['कवियत्री', 'कवयित्री', 'कविञित्री', 'कवित्री'], 'कवयित्री', 'महिला कवि के लिए "कवयित्री" शुद्ध है।', 'Hindi', 'Shabd-Shuddhi'),
+    q('शुद्ध शब्द है:', ['प्रतीक्षा', 'प्रतिक्षा', 'प्रतीखा', 'प्रतिखा'], 'प्रतीक्षा', '"प्रतीक्षा" का शुद्ध रूप।', 'Hindi', 'Shabd-Shuddhi'),
+
+    q('शुद्ध वाक्य चुनें:', ['मुझे प्यास लग रही है', 'मुझको प्यास लग रहा है', 'मुझे प्यास लग रहा है', 'मैं प्यासा लग रही हूँ'], 'मुझे प्यास लग रही है', '"प्यास" स्त्रीलिंग है अतः "लग रही है" सही है।', 'Hindi', 'Vakya-Shuddhi'),
+    q('निम्न में शुद्ध वाक्य है:', ['वह रोज़ व्यायाम करता है', 'वह रोज़ व्यायाम करते है', 'वह रोज़ व्यायाम करता हूँ', 'वह रोज़ व्यायाम करती हूँ'], 'वह रोज़ व्यायाम करता है', 'तृतीय पुरुष एकवचन पुल्लिंग के लिए "करता है" शुद्ध है।', 'Hindi', 'Vakya-Shuddhi'),
+
+    q('"कनक" के अनेकार्थ हैं:', ['सोना और धतूरा', 'चाँदी और ताँबा', 'लोहा और पानी', 'फूल और फल'], 'सोना और धतूरा', 'कनक = सोना (gold) और धतूरा (plant)।', 'Hindi', 'Anekarthak Shabd'),
+    q('"अज" का एक अर्थ "बकरा" है, दूसरा अर्थ है:', ['घोड़ा', 'ब्रह्मा', 'गाय', 'हाथी'], 'ब्रह्मा', 'अज = बकरा और अज = ब्रह्मा।', 'Hindi', 'Anekarthak Shabd'),
+
+    q('"जो सब कुछ जानता हो" के लिए एक शब्द:', ['सर्वज्ञ', 'सर्वशक्तिमान', 'सर्वव्यापी', 'सर्वहारा'], 'सर्वज्ञ', 'सर्वज्ञ = सब कुछ जानने वाला।', 'Hindi', 'Vakyansh ke liye ek Shabd'),
+    q('"जो कभी न मरे" के लिए एक शब्द:', ['अमर', 'अजर', 'अनश्वर', 'अव्यय'], 'अमर', 'अमर = जो कभी न मरे।', 'Hindi', 'Vakyansh ke liye ek Shabd'),
+
+    q('"राजपुत्र" में समास है:', ['तत्पुरुष', 'द्वंद्व', 'बहुव्रीहि', 'द्विगु'], 'तत्पुरुष', 'राजपुत्र = राजा का पुत्र — षष्ठी तत्पुरुष।', 'Hindi', 'Samas evam Samas-Vigrah'),
+    q('"माता-पिता" में समास है:', ['तत्पुरुष', 'द्वंद्व', 'बहुव्रीहि', 'द्विगु'], 'द्वंद्व', 'माता-पिता = माता और पिता — द्वंद्व समास।', 'Hindi', 'Samas evam Samas-Vigrah'),
+
+    q('"वह खाना खा रहा है" में काल है:', ['भूतकाल', 'वर्तमान काल', 'भविष्यकाल', 'सामान्य काल'], 'वर्तमान काल', '"खा रहा है" अपूर्ण वर्तमान काल है।', 'Hindi', 'Kriya evam Kaal'),
+    q('"मैंने पढ़ा" में क्रिया का काल है:', ['वर्तमान', 'भूत', 'भविष्य', 'अनिश्चित'], 'भूत', '"पढ़ा" सामान्य भूतकाल का रूप है।', 'Hindi', 'Kriya evam Kaal'),
+
+    q('द्वंद्व समास का उदाहरण है:', ['राजपुत्र', 'देशभक्त', 'माता-पिता', 'पीतांबर'], 'माता-पिता', 'द्वंद्व समास में दोनों पद प्रधान होते हैं।', 'Hindi', 'Dvandva'),
+    q('"राम-कृष्ण" में समास है:', ['तत्पुरुष', 'द्वंद्व', 'बहुव्रीहि', 'द्विगु'], 'द्वंद्व', 'राम-कृष्ण = राम और कृष्ण — द्वंद्व समास।', 'Hindi', 'Dvandva'),
 ];
 
-// ─── MOCK TEST 2 — 80 Questions (20 GK + 20 Math + 20 Reasoning + 20 English) ──
-const mockTest2 = [
-    // ── GK (20) ──
-    { question: 'Who built the Taj Mahal?', options: ['Akbar', 'Humayun', 'Shah Jahan', 'Aurangzeb'], answer: 'Shah Jahan', explanation: 'Shah Jahan built the Taj Mahal in memory of his wife Mumtaz Mahal.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'What is the national bird of India?', options: ['Parrot', 'Eagle', 'Peacock', 'Swan'], answer: 'Peacock', explanation: 'The Indian Peacock is the national bird of India.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'The capital of Canada is:', options: ['Toronto', 'Ottawa', 'Vancouver', 'Montreal'], answer: 'Ottawa', explanation: 'Ottawa is the capital city of Canada.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Who is known as the Iron Man of India?', options: ['Mahatma Gandhi', 'Jawaharlal Nehru', 'Sardar Vallabhbhai Patel', 'Subhas Chandra Bose'], answer: 'Sardar Vallabhbhai Patel', explanation: 'Sardar Patel is called the Iron Man for unifying Indian states.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'The Constitution of India was adopted on:', options: ['15 August 1947', '26 January 1950', '26 November 1949', '2 October 1948'], answer: '26 November 1949', explanation: 'The Constitution was adopted on 26 November 1949 and came into effect on 26 January 1950.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Which river is called the "National River" of India?', options: ['Yamuna', 'Ganga', 'Brahmaputra', 'Godavari'], answer: 'Ganga', explanation: 'The Ganga (Ganges) is the national river of India.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Who was the first Indian to go to space?', options: ['Kalpana Chawla', 'Sunita Williams', 'Rakesh Sharma', 'A.P.J. Abdul Kalam'], answer: 'Rakesh Sharma', explanation: 'Rakesh Sharma traveled to space in 1984 aboard Soyuz T-11.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'What is the national tree of India?', options: ['Neem', 'Peepal', 'Banyan', 'Mango'], answer: 'Banyan', explanation: 'The Banyan tree (Ficus benghalensis) is the national tree of India.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Which state has the longest coastline in India?', options: ['Maharashtra', 'Andhra Pradesh', 'Gujarat', 'Tamil Nadu'], answer: 'Gujarat', explanation: 'Gujarat has the longest coastline of any Indian state (~1,600 km).', subject: 'GK', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'What is the pH value of pure water?', options: ['5', '6', '7', '8'], answer: '7', explanation: 'Pure water is neutral with a pH of exactly 7.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Who discovered the electron?', options: ['Ernest Rutherford', 'J.J. Thomson', 'Niels Bohr', 'Albert Einstein'], answer: 'J.J. Thomson', explanation: 'J.J. Thomson discovered the electron in 1897.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'What is the hardest natural substance?', options: ['Gold', 'Iron', 'Diamond', 'Quartz'], answer: 'Diamond', explanation: 'Diamond is the hardest naturally occurring substance (10 on Mohs scale).', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Who painted the "Mona Lisa"?', options: ['Michelangelo', 'Raphael', 'Leonardo da Vinci', 'Picasso'], answer: 'Leonardo da Vinci', explanation: 'Leonardo da Vinci painted the Mona Lisa in the early 16th century.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Which is the longest bone in the human body?', options: ['Spine', 'Tibia', 'Femur', 'Humerus'], answer: 'Femur', explanation: 'The femur (thigh bone) is the longest bone in the human body.', subject: 'GK', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'The national anthem of India was written by:', options: ['Bankim Chandra Chattopadhyay', 'Rabindranath Tagore', 'Sarojini Naidu', 'Subramanya Bharati'], answer: 'Rabindranath Tagore', explanation: 'Jana Gana Mana was written by Rabindranath Tagore.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: '"Wings of Fire" is an autobiography of:', options: ['Amitabh Bachchan', 'Sachin Tendulkar', 'A.P.J. Abdul Kalam', 'Narendra Modi'], answer: 'A.P.J. Abdul Kalam', explanation: 'Wings of Fire is the autobiography of Dr. A.P.J. Abdul Kalam.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Which vitamin is produced by the human body when exposed to sunlight?', options: ['Vitamin A', 'Vitamin B12', 'Vitamin C', 'Vitamin D'], answer: 'Vitamin D', explanation: 'Vitamin D is synthesized in the skin when exposed to UVB radiation from sunlight.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'The "Doctrine of Lapse" was introduced by:', options: ['Lord Wellesley', 'Lord Cornwallis', 'Lord Dalhousie', 'Lord Curzon'], answer: 'Lord Dalhousie', explanation: 'Lord Dalhousie introduced the Doctrine of Lapse to annex Indian states.', subject: 'GK', difficulty: 'Hard', mockTestNumber: 2, isActive: true },
-    { question: 'The full form of CPU is:', options: ['Central Power Unit', 'Central Processing Unit', 'Computer Processing Unit', 'Central Program Unit'], answer: 'Central Processing Unit', explanation: 'CPU stands for Central Processing Unit, the brain of the computer.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Which is the smallest continent by land area?', options: ['Europe', 'Australia', 'Antarctica', 'South America'], answer: 'Australia', explanation: 'Australia is the smallest of the seven continents.', subject: 'GK', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-
-    // ── Math (20) ──
-    { question: 'A train travels 600 km in 5 hours. Its speed is:', options: ['100 km/h', '110 km/h', '120 km/h', '130 km/h'], answer: '120 km/h', explanation: 'Speed=Distance/Time=600/5=120 km/h.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Compound interest on ₹10000 at 10% for 2 years is:', options: ['₹1000', '₹2000', '₹2100', '₹2200'], answer: '₹2100', explanation: 'CI=P[(1+r/100)^t - 1]=10000[(1.1)²-1]=10000×0.21=₹2100.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'A shopkeeper gives 20% discount on ₹500. Selling price is:', options: ['₹350', '₹380', '₹400', '₹420'], answer: '₹400', explanation: 'Discount=20% of 500=₹100. SP=500-100=₹400.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Perimeter of a square with side 7 cm is:', options: ['14 cm', '21 cm', '28 cm', '49 cm'], answer: '28 cm', explanation: 'Perimeter=4×side=4×7=28 cm.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'What is 15% of 80?', options: ['10', '12', '14', '15'], answer: '12', explanation: '15% of 80=(15/100)×80=12.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'LCM of 12 and 18 is:', options: ['6', '24', '36', '72'], answer: '36', explanation: 'LCM(12,18)=36.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'A pipe fills a tank in 6 hours. Part filled in 2 hours is:', options: ['1/6', '1/4', '1/3', '1/2'], answer: '1/3', explanation: 'In 1 hr it fills 1/6. In 2 hrs = 2/6 = 1/3.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'The median of 3, 5, 7, 9, 11 is:', options: ['5', '6', '7', '9'], answer: '7', explanation: 'Middle value of ordered set 3,5,7,9,11 is 7.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Sum of all interior angles of a hexagon is:', options: ['540°', '620°', '720°', '900°'], answer: '720°', explanation: 'Sum=(n-2)×180=(6-2)×180=4×180=720°.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'A and B together finish a job in 12 days. A alone takes 20 days. B alone takes:', options: ['24 days', '28 days', '30 days', '32 days'], answer: '30 days', explanation: '1/B=1/12-1/20=5/60-3/60=2/60=1/30. B=30 days.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'The square root of 1764 is:', options: ['40', '42', '44', '46'], answer: '42', explanation: '42×42=1764.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Boat speed in still water: 8 km/h, stream speed: 2 km/h. Speed downstream:', options: ['6 km/h', '8 km/h', '10 km/h', '12 km/h'], answer: '10 km/h', explanation: 'Downstream speed=boat+stream=8+2=10 km/h.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: '5 men can do work in 8 days. 4 men can do it in:', options: ['8 days', '9 days', '10 days', '12 days'], answer: '10 days', explanation: '5×8=4×D. D=40/4=10 days.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Area of a triangle with base 10 cm and height 8 cm:', options: ['20 cm²', '40 cm²', '60 cm²', '80 cm²'], answer: '40 cm²', explanation: 'Area=½×base×height=½×10×8=40 cm².', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: '121 × 121 = ?', options: ['13321', '14421', '14641', '15641'], answer: '14641', explanation: '121²=14641.', subject: 'Math', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'The mode of 2, 3, 3, 4, 5, 5, 5 is:', options: ['2', '3', '4', '5'], answer: '5', explanation: '5 appears most frequently (3 times) so mode=5.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'What is 30% of 200?', options: ['40', '50', '60', '70'], answer: '60', explanation: '30% of 200=(30/100)×200=60.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Find the value of x: x/5 = 9', options: ['35', '40', '45', '50'], answer: '45', explanation: 'x=9×5=45.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Simplify: 3/4 + 5/8', options: ['8/12', '11/8', '9/8', '7/8'], answer: '11/8', explanation: '3/4+5/8=6/8+5/8=11/8.', subject: 'Math', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'If x:y=3:4 and y:z=8:9, then x:z is:', options: ['1:2', '2:3', '3:4', '4:5'], answer: '2:3', explanation: 'x:y=3:4, y:z=8:9 → x:z=(3×8):(4×9)=24:36=2:3.', subject: 'Math', difficulty: 'Hard', mockTestNumber: 2, isActive: true },
-
-    // ── Reasoning (20) ──
-    { question: 'Carpenter : Wood :: Painter : ?', options: ['Brush', 'Canvas', 'Color', 'Easel'], answer: 'Canvas', explanation: 'Carpenter works with Wood; Painter works with Canvas.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Find next: 3, 6, 11, 18, 27, ?', options: ['34', '36', '38', '40'], answer: '38', explanation: 'Differences: 3,5,7,9,11. Next=27+11=38.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'John is taller than Peter. Peter is taller than Sam. Who is shortest?', options: ['John', 'Peter', 'Sam', 'Cannot determine'], answer: 'Sam', explanation: 'John > Peter > Sam. So Sam is shortest.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'In a row, Ram is 7th from left and 13th from right. Total students:', options: ['18', '19', '20', '21'], answer: '19', explanation: 'Total=7+13-1=19.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'ODD one out: Cow, Goat, Hen, Dog', options: ['Cow', 'Goat', 'Hen', 'Dog'], answer: 'Dog', explanation: 'Cow, Goat, Hen are farm animals raised for food/milk/eggs; Dog is a pet.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Fire : Ash :: Water : ?', options: ['Ice', 'Rain', 'Steam', 'River'], answer: 'Steam', explanation: 'Fire produces Ash; Water (when heated) produces Steam.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'A is east of B. C is north of B. In which direction is A from C?', options: ['North-East', 'South', 'South-East', 'East'], answer: 'South-East', explanation: 'B is center, A is East, C is North. So A is South-East of C.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Complete: 2, 5, 10, 17, 26, ?', options: ['35', '37', '39', '41'], answer: '37', explanation: 'Differences: 3,5,7,9,11. Next=26+11=37.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Arrange in logical order: 1.Foundation 2.Roof 3.Walls 4.Floor', options: ['1,2,3,4', '1,4,3,2', '2,3,4,1', '4,1,3,2'], answer: '1,4,3,2', explanation: 'Building is constructed: Foundation → Floor → Walls → Roof.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Statement: No dogs are cats. Conclusion: Some cats are not dogs.', options: ['Follows', 'Does not follow', 'Cannot be determined', 'Partially follows'], answer: 'Follows', explanation: 'If no dogs are cats, then some (or all) cats are not dogs.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Square : 4 :: Hexagon : ?', options: ['5', '6', '7', '8'], answer: '6', explanation: 'Square has 4 sides; Hexagon has 6 sides.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'ODD one out: BDFH, PRTV, ACEG, LMNO', options: ['BDFH', 'PRTV', 'ACEG', 'LMNO'], answer: 'LMNO', explanation: 'BDFH, PRTV, ACEG all skip one letter; LMNO has consecutive letters.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: '6 : 36 :: 8 : ?', options: ['48', '56', '64', '72'], answer: '64', explanation: '6²=36, so 8²=64.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'A walks 5km North, 3km East, then 5km South. How far from start?', options: ['1 km', '2 km', '3 km', '5 km'], answer: '3 km', explanation: '5km North and 5km South cancel. Remaining: 3km East from start.', subject: 'Reasoning', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'If CAT = 3-1-20, what is BAT?', options: ['2-1-19', '2-1-20', '3-2-20', '1-2-20'], answer: '2-1-20', explanation: 'B=2, A=1, T=20. BAT=2-1-20.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'A man faces North, turns 90° clockwise, then 90° anticlockwise. He now faces:', options: ['North', 'South', 'East', 'West'], answer: 'North', explanation: '+90° clockwise → East. Then -90° (anticlockwise) → back to North.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Find next letter: D, G, J, M, ?', options: ['N', 'O', 'P', 'Q'], answer: 'P', explanation: 'Each letter is 3 positions ahead: D+3=G, G+3=J, J+3=M, M+3=P.', subject: 'Reasoning', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'If SUNDAY = XZSIEB, how is MONDAY coded?', options: ['RNFCBX', 'RNCIEB', 'RNFIBX', 'RNDIBX'], answer: 'RNFCBX', explanation: 'Each letter shifted by +5: M+5=R, O+5=T... (shift pattern applies).', subject: 'Reasoning', difficulty: 'Hard', mockTestNumber: 2, isActive: true },
-    { question: 'How many triangles are in a triangle divided by 2 lines from each vertex?', options: ['4', '6', '8', '10'], answer: '6', explanation: 'A triangle divided by medians contains 6 smaller triangles.', subject: 'Reasoning', difficulty: 'Hard', mockTestNumber: 2, isActive: true },
-    { question: 'Pointing to a photo, a man says "Her mother is the wife of my father\'s son." Who is in photo?', options: ['His daughter', 'His niece', 'His sister', 'His wife'], answer: 'His daughter', explanation: 'Father\'s son = himself. Wife of himself = his wife. Her mother = his wife → the girl is his daughter.', subject: 'Reasoning', difficulty: 'Hard', mockTestNumber: 2, isActive: true },
-
-    // ── English (20) ──
-    { question: 'Synonym of "COURAGEOUS":', options: ['Timid', 'Brave', 'Weak', 'Cowardly'], answer: 'Brave', explanation: 'Courageous and Brave both mean having bravery.', subject: 'English', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Antonym of "GENUINE":', options: ['Real', 'Authentic', 'Fake', 'True'], answer: 'Fake', explanation: 'Genuine means real/authentic; Fake is its antonym.', subject: 'English', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Fill in: She _____ to school every day.', options: ['go', 'goes', 'gone', 'going'], answer: 'goes', explanation: 'Third person singular (she) takes "goes" in simple present.', subject: 'English', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Passive voice: "They built the bridge."', options: ['The bridge was built by them.', 'The bridge is built by them.', 'The bridge had been built by them.', 'The bridge will be built by them.'], answer: 'The bridge was built by them.', explanation: 'Past simple active → was/were + past participle.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Meaning of "Hit the nail on the head":', options: ['To cause injury', 'To say exactly the right thing', 'To fail completely', 'To do a repair job'], answer: 'To say exactly the right thing', explanation: '"Hit the nail on the head" means to be exactly right.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Find the error: "She don\'t know the answer."', options: ['She', 'don\'t', 'know', 'the answer'], answer: 'don\'t', explanation: '"She" (third person singular) requires "doesn\'t", not "don\'t".', subject: 'English', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'One word for "Fear of heights":', options: ['Claustrophobia', 'Acrophobia', 'Agoraphobia', 'Hydrophobia'], answer: 'Acrophobia', explanation: 'Acrophobia is the extreme fear of heights.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Fill in: He is senior _____ me.', options: ['than', 'from', 'to', 'over'], answer: 'to', explanation: '"Senior to" is the correct preposition usage.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Identify the tense: "I had been waiting for an hour."', options: ['Past Perfect', 'Past Perfect Continuous', 'Past Continuous', 'Present Perfect'], answer: 'Past Perfect Continuous', explanation: '"Had been + verb-ing" is Past Perfect Continuous.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Synonym of "MELANCHOLY":', options: ['Joy', 'Anger', 'Sadness', 'Fear'], answer: 'Sadness', explanation: 'Melancholy means deep sadness or gloom.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Antonym of "TRANSPARENT":', options: ['Clear', 'Visible', 'Opaque', 'Shiny'], answer: 'Opaque', explanation: 'Transparent allows light through; Opaque does not.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Fill in: _____ apple a day keeps the doctor away.', options: ['A', 'An', 'The', 'No article'], answer: 'An', explanation: '"An" is used before words starting with a vowel sound.', subject: 'English', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Meaning of "Bite the bullet":', options: ['To eat quickly', 'To endure a painful situation', 'To speak frankly', 'To work hard'], answer: 'To endure a painful situation', explanation: '"Bite the bullet" means to endure a painful or difficult situation.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'One word substitution: A speech given to oneself:', options: ['Monologue', 'Soliloquy', 'Dialogue', 'Oration'], answer: 'Soliloquy', explanation: 'A soliloquy is a speech in which one speaks their thoughts aloud alone.', subject: 'English', difficulty: 'Hard', mockTestNumber: 2, isActive: true },
-    { question: 'Find the error: "He doesn\'t knows me."', options: ['He', 'doesn\'t', 'knows', 'me'], answer: 'knows', explanation: 'After "doesn\'t", the base form is used: "doesn\'t know".', subject: 'English', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Fill in: Neither he nor his friends _____ present.', options: ['is', 'was', 'were', 'are'], answer: 'were', explanation: 'With "neither...nor", verb agrees with the nearest subject (friends = plural → were).', subject: 'English', difficulty: 'Hard', mockTestNumber: 2, isActive: true },
-    { question: 'Direct speech: She said that she was tired.', options: ['"I am tired," she said.', '"She is tired," she said.', '"I was tired," she said.', '"I will be tired," she said.'], answer: '"I am tired," she said.', explanation: 'In direct speech, past tense in indirect becomes present tense.', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-    { question: 'Synonym of "ENORMOUS":', options: ['Tiny', 'Huge', 'Average', 'Slim'], answer: 'Huge', explanation: 'Enormous and Huge both mean very large.', subject: 'English', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Antonym of "VICTORY":', options: ['Success', 'Win', 'Defeat', 'Achievement'], answer: 'Defeat', explanation: 'Victory means winning; Defeat means losing.', subject: 'English', difficulty: 'Easy', mockTestNumber: 2, isActive: true },
-    { question: 'Correctly spelt word:', options: ['Accomodation', 'Accommodation', 'Acomodation', 'Acommodation'], answer: 'Accommodation', explanation: 'Accommodation has double "c" and double "m".', subject: 'English', difficulty: 'Medium', mockTestNumber: 2, isActive: true },
-];
-
-async function seedQuestions() {
-    try {
-        await mongoose.connect(MONGODB_URI);
-        console.log('✅ Connected to MongoDB');
-
-        await Question.deleteMany({});
-        console.log('🗑️  Cleared existing questions');
-
-        const allQuestions = [...mockTest1, ...mockTest2];
-        const inserted = await Question.insertMany(allQuestions);
-        console.log(`✅ Seeded ${inserted.length} questions successfully!`);
-        console.log(`   Mock Test 1: ${mockTest1.length} questions`);
-        console.log(`   Mock Test 2: ${mockTest2.length} questions`);
-
-        process.exit(0);
-    } catch (error) {
-        console.error('❌ Seed error:', error);
-        process.exit(1);
-    }
+async function seed() {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Connected to MongoDB');
+    await Question.deleteMany({});
+    console.log('Cleared existing questions');
+    await Question.insertMany(questions);
+    console.log(`Seeded ${questions.length} questions across 63 chapters`);
+    await mongoose.disconnect();
 }
 
-seedQuestions();
+seed().catch(err => { console.error(err); process.exit(1); });
